@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org" th:fragment="layout(title, content)">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${title} + ' | WorkHub'"></title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/htmx.org@2.0.0"></script>
+</head>
+
+<body>
+    <header>
+        <div class="container"
+            style="padding: 0 1rem; display: flex; justify-content: space-between; align-items: center;">
+            <div class="nav-brand">WorkHub</div>
+            <nav>
+                <code style="color: var(--text-muted); font-size: 0.8rem;">v0.0.1-dev</code>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <div th:replace="${content}"></div>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 WorkHub - Desenvolvido para produtividade e estudos de arquitetura.</p>
+    </footer>
+</body>
+
+</html>
