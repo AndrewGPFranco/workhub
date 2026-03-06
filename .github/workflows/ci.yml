@@ -1,4 +1,4 @@
-name: Pipeline - Bet Insights
+name: Pipeline - Workhub
 
 on:
   push:
