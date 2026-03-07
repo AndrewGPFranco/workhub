@@ -1,6 +1,6 @@
-package com.agpf.workhub.repositories;
+package com.agpf.workhub.infrastructure.adapters.out.persistence;
 
-import com.agpf.workhub.entities.User;
+import com.agpf.workhub.domain.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

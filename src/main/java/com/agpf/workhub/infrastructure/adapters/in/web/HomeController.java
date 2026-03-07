@@ -1,4 +1,4 @@
-package com.agpf.workhub.controller;
+package com.agpf.workhub.infrastructure.adapters.in.web;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;

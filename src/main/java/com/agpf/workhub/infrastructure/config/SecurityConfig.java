@@ -1,4 +1,4 @@
-package com.agpf.workhub.configs;
+package com.agpf.workhub.infrastructure.config;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -32,9 +32,7 @@ public class SecurityConfig implements WebMvcConfigurer {
     public SecurityFilterChain filterChain(HttpSecurity http) {
         return http.csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .authorizeHttpRequests(auth -> {
-                    auth.requestMatchers(WHITE_LIST).permitAll().anyRequest().authenticated();
-                }).httpBasic(Customizer.withDefaults())
+                .authorizeHttpRequests(auth -> auth.requestMatchers(WHITE_LIST).permitAll().anyRequest().authenticated()).httpBasic(Customizer.withDefaults())
                 .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class).build();
     }
 

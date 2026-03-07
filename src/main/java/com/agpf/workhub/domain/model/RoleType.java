@@ -1,4 +1,4 @@
-package com.agpf.workhub.enums;
+package com.agpf.workhub.domain.model;
 
 import java.util.Set;
 

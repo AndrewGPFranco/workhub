@@ -1,7 +1,7 @@
-package com.agpf.workhub.services;
+package com.agpf.workhub.application.usecases;
 
-import com.agpf.workhub.entities.User;
-import com.agpf.workhub.enums.RoleType;
+import com.agpf.workhub.domain.model.User;
+import com.agpf.workhub.domain.model.RoleType;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTCreationException;
 import com.auth0.jwt.exceptions.JWTVerificationException;

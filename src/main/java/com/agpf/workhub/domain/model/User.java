@@ -1,6 +1,5 @@
-package com.agpf.workhub.entities;
+package com.agpf.workhub.domain.model;
 
-import com.agpf.workhub.enums.RoleType;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
