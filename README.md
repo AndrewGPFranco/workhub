@@ -35,6 +35,6 @@ Estou usando este projeto também para colocar em prática alguns temas mais ava
 - [ ] **Hub de docs:** Um hub para centralizar todas as docs que utilizei.
 - [ ] **File Hub:** Repositório simples para arquivos que preciso ter sempre à mão.
 - [ ] **Notas Técnicas:** Espaço para snippets, comandos rápidos e anotações de estudo.
-- [ ] **Gestão Multi-usuário:** Embora pessoal no momento, o sistema suporta múltiplos perfis.
+- [x] **Gestão Multi-usuário:** Embora pessoal no momento, o sistema suporta múltiplos perfis.
 
 ---
