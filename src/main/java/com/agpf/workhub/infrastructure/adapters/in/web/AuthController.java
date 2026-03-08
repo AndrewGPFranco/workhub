@@ -1,6 +1,7 @@
 package com.agpf.workhub.infrastructure.adapters.in.web;
 
 import com.agpf.workhub.domain.ports.in.AuthUseCase;
+import com.agpf.workhub.infrastructure.dto.auth.AuthLoginDTO;
 import com.agpf.workhub.infrastructure.dto.auth.ResponseAPI;
 import com.agpf.workhub.infrastructure.dto.auth.UserRegisterDTO;
 import com.agpf.workhub.infrastructure.dto.auth.ValidatorAccountDTO;
@@ -29,5 +30,12 @@ public class AuthController {
         authUseCase.validarConta(dto);
         return ResponseEntity.status(HttpStatus.OK).body(new ResponseAPI<>("A conta foi validada com sucesso!"));
     }
+
+    @PostMapping(value = "/auth/register/code")
+    public ResponseEntity<ResponseAPI<String>> realizarLogin(@Valid @RequestBody AuthLoginDTO dto) {
+        String token = authUseCase.realizarLogin(dto);
+        return ResponseEntity.status(HttpStatus.OK).body(new ResponseAPI<>(token));
+    }
+
 
 }

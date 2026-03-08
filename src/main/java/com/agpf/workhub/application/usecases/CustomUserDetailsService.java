@@ -14,7 +14,7 @@ import java.util.regex.Pattern;
 public class CustomUserDetailsService implements UserDetailsService {
 
     private final UserRepositoryPort userRepositoryPort;
-    private final Pattern patternEmail = Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
+    private static final Pattern patternEmail = Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
 
     @Override
     public UserDetails loadUserByUsername(String usernameOrEmail) throws UsernameNotFoundException {
@@ -26,7 +26,7 @@ public class CustomUserDetailsService implements UserDetailsService {
                 .orElseThrow(() -> new UsernameNotFoundException(usernameOrEmail));
     }
 
-    public boolean isEmail(String usernameOrEmail) {
+    public static boolean isEmail(String usernameOrEmail) {
         return patternEmail.matcher(usernameOrEmail).matches();
     }
 

@@ -1,10 +1,12 @@
 package com.agpf.workhub.application.usecases.auth;
 
+import com.agpf.workhub.application.usecases.CustomUserDetailsService;
 import com.agpf.workhub.application.usecases.EmailService;
 import com.agpf.workhub.domain.model.RoleType;
 import com.agpf.workhub.domain.model.User;
 import com.agpf.workhub.domain.ports.in.AuthUseCase;
 import com.agpf.workhub.domain.ports.out.UserRepositoryPort;
+import com.agpf.workhub.infrastructure.dto.auth.AuthLoginDTO;
 import com.agpf.workhub.infrastructure.dto.auth.UserCacheDTO;
 import com.agpf.workhub.infrastructure.dto.auth.UserRegisterDTO;
 import com.agpf.workhub.infrastructure.dto.auth.ValidatorAccountDTO;
@@ -22,6 +24,8 @@ import redis.clients.jedis.Jedis;
 
 import java.security.SecureRandom;
 import java.time.LocalDateTime;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 
 @Slf4j
@@ -33,6 +37,7 @@ public class AuthService implements AuthUseCase {
     private ObjectMapper objectMapper;
     private final PasswordEncoder encoder;
     private final EmailService emailService;
+    private final JwtTokenService jwtTokenService;
     private final UserRepositoryPort userRepository;
 
     private static final SecureRandom random = new SecureRandom();
@@ -98,4 +103,24 @@ public class AuthService implements AuthUseCase {
         userRepository.save(userCache.user());
         jedis.del(dto.email());
     }
+
+    @Override
+    public String realizarLogin(AuthLoginDTO dto) {
+        boolean isEmail = CustomUserDetailsService.isEmail(dto.usernameOrEmail());
+
+        Optional<User> usuario;
+        if (isEmail)
+            usuario = userRepository.findByEmail(dto.usernameOrEmail());
+        else
+            usuario = userRepository.findByUsername(dto.usernameOrEmail());
+
+        if (usuario.isEmpty())
+            throw new RuntimeException("Usuário informado não foi encontrado!");
+
+        if (!Objects.equals(usuario.get().getPassword(), encoder.encode(dto.password())))
+            throw new RuntimeException("A senha informada está incorreta!");
+
+        return jwtTokenService.generateToken(usuario.get());
+    }
+
 }
