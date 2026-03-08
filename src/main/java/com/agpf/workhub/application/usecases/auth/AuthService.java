@@ -34,19 +34,13 @@ import java.util.Set;
 public class AuthService implements AuthUseCase {
 
     private final Jedis jedis;
-    private ObjectMapper objectMapper;
     private final PasswordEncoder encoder;
+    private final ObjectMapper objectMapper;
     private final EmailService emailService;
     private final JwtTokenService jwtTokenService;
     private final UserRepositoryPort userRepository;
 
     private static final SecureRandom random = new SecureRandom();
-
-    @PostConstruct
-    void setUp() {
-        objectMapper = new ObjectMapper();
-        objectMapper.registerModule(new JavaTimeModule());
-    }
 
     @Override
     @Transactional
