@@ -26,7 +26,7 @@ public class SecurityConfig implements WebMvcConfigurer {
 
     private final SecurityFilter securityFilter;
 
-    private static final String[] WHITE_LIST = {"/user/login", "/user/register"};
+    private static final String[] WHITE_LIST = {"/auth/login", "/auth/register", "/auth/register/code"};
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) {

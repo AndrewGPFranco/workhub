@@ -2,7 +2,7 @@ package com.agpf.workhub.infrastructure.config;
 
 import com.agpf.workhub.domain.model.User;
 import com.agpf.workhub.domain.ports.out.UserRepositoryPort;
-import com.agpf.workhub.application.usecases.JwtTokenService;
+import com.agpf.workhub.application.usecases.auth.JwtTokenService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

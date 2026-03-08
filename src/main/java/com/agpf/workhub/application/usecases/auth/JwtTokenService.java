@@ -1,4 +1,4 @@
-package com.agpf.workhub.application.usecases;
+package com.agpf.workhub.application.usecases.auth;
 
 import com.agpf.workhub.domain.model.User;
 import com.agpf.workhub.domain.model.RoleType;
@@ -16,7 +16,7 @@ import java.time.ZoneOffset;
 @Service
 public class JwtTokenService {
 
-    @Value("${reader.jwt.secret}")
+    @Value("${workhub.jwt.secret}")
     private String secret;
 
     /**
