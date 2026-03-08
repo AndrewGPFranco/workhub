@@ -31,11 +31,10 @@ public class AuthController {
         return ResponseEntity.status(HttpStatus.OK).body(new ResponseAPI<>("A conta foi validada com sucesso!"));
     }
 
-    @PostMapping(value = "/auth/register/code")
+    @PostMapping(value = "/auth/login")
     public ResponseEntity<ResponseAPI<String>> realizarLogin(@Valid @RequestBody AuthLoginDTO dto) {
         String token = authUseCase.realizarLogin(dto);
         return ResponseEntity.status(HttpStatus.OK).body(new ResponseAPI<>(token));
     }
-
 
 }

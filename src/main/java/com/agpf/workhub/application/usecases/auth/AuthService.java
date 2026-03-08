@@ -117,7 +117,7 @@ public class AuthService implements AuthUseCase {
         if (usuario.isEmpty())
             throw new RuntimeException("Usuário informado não foi encontrado!");
 
-        if (!Objects.equals(usuario.get().getPassword(), encoder.encode(dto.password())))
+        if (!encoder.matches(dto.password(), usuario.get().getPassword()))
             throw new RuntimeException("A senha informada está incorreta!");
 
         return jwtTokenService.generateToken(usuario.get());
