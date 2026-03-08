@@ -51,16 +51,9 @@ public class AuthService implements AuthUseCase {
     @Override
     @Transactional
     public void registrarUsuario(UserRegisterDTO dto) {
-        User usuario = User.builder()
-                .email(dto.email())
-                .fullName(dto.fullname())
-                .username(dto.username())
-                .firstName(dto.firstName())
-                .dateBirth(dto.dateBirth())
-                .roles(Set.of(RoleType.USER))
-                .createdAt(LocalDateTime.now())
-                .password(encoder.encode(dto.password()))
-                .build();
+        User usuario = User.builder().email(dto.email()).fullName(dto.fullname()).username(dto.username())
+                .firstName(dto.firstName()).dateBirth(dto.dateBirth()).roles(Set.of(RoleType.USER))
+                .createdAt(LocalDateTime.now()).password(encoder.encode(dto.password())).build();
 
         String codigo = gerarCodigo();
         UserCacheDTO usuarioCache = new UserCacheDTO(usuario, codigo);
@@ -108,11 +101,7 @@ public class AuthService implements AuthUseCase {
     public String realizarLogin(AuthLoginDTO dto) {
         boolean isEmail = CustomUserDetailsService.isEmail(dto.usernameOrEmail());
 
-        Optional<User> usuario;
-        if (isEmail)
-            usuario = userRepository.findByEmail(dto.usernameOrEmail());
-        else
-            usuario = userRepository.findByUsername(dto.usernameOrEmail());
+        Optional<User> usuario = isEmail ? userRepository.findByEmail(dto.usernameOrEmail()) : userRepository.findByUsername(dto.usernameOrEmail());
 
         if (usuario.isEmpty())
             throw new RuntimeException("Usuário informado não foi encontrado!");
