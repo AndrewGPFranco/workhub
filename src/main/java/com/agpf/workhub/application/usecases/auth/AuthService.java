@@ -63,7 +63,7 @@ public class AuthService implements AuthUseCase {
 
         jedis.set(usuario.getEmail(), json);
 
-        emailService.enviarEmailComCodigoParaRegistro("andrewgomes1328@gmail.com", codigo);
+        emailService.enviarEmailComCodigoParaRegistro(dto.email(), codigo);
     }
 
     public static String gerarCodigo() {

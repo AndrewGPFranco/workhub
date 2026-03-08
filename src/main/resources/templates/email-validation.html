@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Código de Validação</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f7f6;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 40px auto;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background-color: #0056b3;
+            color: #ffffff;
+            text-align: center;
+            padding: 30px 20px;
+        }
+
+        .header img.logo {
+            max-width: 80px;
+            margin-bottom: 15px;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 24px;
+            font-weight: 600;
+        }
+
+        .content {
+            padding: 40px 30px;
+            color: #333333;
+            line-height: 1.6;
+        }
+
+        .content p {
+            font-size: 16px;
+            margin-bottom: 20px;
+        }
+
+        .code-container {
+            text-align: center;
+            margin: 30px 0;
+        }
+
+        .code-box {
+            display: inline-block;
+            background-color: #f8f9fa;
+            border: 2px dashed #0056b3;
+            color: #0056b3;
+            font-size: 32px;
+            font-weight: bold;
+            letter-spacing: 4px;
+            padding: 15px 30px;
+            border-radius: 6px;
+        }
+
+        .footer {
+            background-color: #f8f9fa;
+            text-align: center;
+            padding: 20px;
+            color: #555555;
+            font-size: 14px;
+            border-top: 1px solid #eeeeee;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <img src="https://i.ibb.co/MyZ5mxSW/favicon.png" alt="Workhub Logo" class="logo">
+        <h1>Valide sua conta no Workhub</h1>
+    </div>
+    <div class="content">
+        <p>Olá,</p>
+        <p>Obrigado por se registrar no Workhub! Para completar o seu cadastro e ativar a sua conta, por favor, utilize
+            o código de validação abaixo.</p>
+
+        <div class="code-container">
+            <div class="code-box">{{code}}</div>
+        </div>
+
+        <p>Se você não solicitou este registro, pode ignorar este email com segurança. O código expirará em breve.</p>
+        <p>Atenciosamente,<br>Equipe Workhub</p>
+    </div>
+    <div class="footer">
+        <p>&copy; 2026 Workhub. Todos os direitos reservados.</p>
+    </div>
+</div>
+</body>
+</html>
