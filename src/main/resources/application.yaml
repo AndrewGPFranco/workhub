@@ -1,0 +1,7 @@
+spring:
+  application:
+    name: workhub
+  datasource:
+    url: jdbc:postgresql://localhost:5432/${DB}
+    username: ${USER_DB}
+    password: ${PASSWORD_DB}
