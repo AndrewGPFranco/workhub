@@ -2,6 +2,13 @@ spring:
   application:
     name: workhub
   datasource:
-    url: jdbc:postgresql://localhost:5432/${DB}
-    username: ${USER_DB}
-    password: ${PASSWORD_DB}
+    url: jdbc:postgresql://localhost:5432/${DB:workhub-db}
+    username: ${USER_DB:workhub}
+    password: ${PASSWORD_DB:workhub}
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: ${KEYCLOAK_ISSUER_URI:http://localhost:8080/realms/workhub}
+server:
+  port: 8090
