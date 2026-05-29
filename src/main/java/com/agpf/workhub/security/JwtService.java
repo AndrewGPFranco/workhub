@@ -26,8 +26,7 @@ public class JwtService {
     private final ObjectMapper objectMapper;
     private static final String HMAC_ALGORITHM = "HmacSHA256";
 
-    public JwtService(@Value("${auth.jwt.secret}") String secret,
-            @Value("${auth.jwt.expiration-minutes}") long expirationMinutes) {
+    public JwtService(@Value("${auth.jwt.secret}") String secret, @Value("${auth.jwt.expiration-minutes}") long expirationMinutes) {
         this.objectMapper = new ObjectMapper();
         this.secret = secret.getBytes(StandardCharsets.UTF_8);
         this.expirationSeconds = expirationMinutes * 60;
@@ -60,8 +59,7 @@ public class JwtService {
         var claims = claims(token);
         var subject = claims.get("sub");
         var expiration = claims.get("exp");
-        return userDetails.getUsername().equals(subject) && expiration instanceof Number exp
-                && exp.longValue() > Instant.now().getEpochSecond();
+        return userDetails.getUsername().equals(subject) && expiration instanceof Number exp && exp.longValue() > Instant.now().getEpochSecond();
     }
 
     private boolean hasValidSignature(String token) {
@@ -70,8 +68,7 @@ public class JwtService {
             return false;
 
         var unsignedToken = parts[0] + "." + parts[1];
-        return MessageDigest.isEqual(sign(unsignedToken).getBytes(StandardCharsets.UTF_8),
-                parts[2].getBytes(StandardCharsets.UTF_8));
+        return MessageDigest.isEqual(sign(unsignedToken).getBytes(StandardCharsets.UTF_8), parts[2].getBytes(StandardCharsets.UTF_8));
     }
 
     private Map<String, Object> claims(String token) {
@@ -87,8 +84,7 @@ public class JwtService {
 
     private String encodeJson(Map<String, Object> value) {
         try {
-            return Base64.getUrlEncoder().withoutPadding()
-                    .encodeToString(this.objectMapper.writeValueAsBytes(value));
+            return Base64.getUrlEncoder().withoutPadding().encodeToString(this.objectMapper.writeValueAsBytes(value));
         } catch (Exception ex) {
             throw new IllegalStateException("Could not encode JWT", ex);
         }
