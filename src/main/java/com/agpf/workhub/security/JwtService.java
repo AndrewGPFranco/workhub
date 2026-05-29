@@ -21,13 +21,10 @@ import org.springframework.util.StringUtils;
 @Service
 public class JwtService {
 
-    private static final String HMAC_ALGORITHM = "HmacSHA256";
-
-    private final ObjectMapper objectMapper;
-
     private final byte[] secret;
-
     private final long expirationSeconds;
+    private final ObjectMapper objectMapper;
+    private static final String HMAC_ALGORITHM = "HmacSHA256";
 
     public JwtService(@Value("${auth.jwt.secret}") String secret,
             @Value("${auth.jwt.expiration-minutes}") long expirationMinutes) {
@@ -57,9 +54,9 @@ public class JwtService {
     }
 
     public boolean isValid(String token, UserDetails userDetails) {
-        if (!StringUtils.hasText(token) || !hasValidSignature(token)) {
+        if (!StringUtils.hasText(token) || !hasValidSignature(token))
             return false;
-        }
+
         var claims = claims(token);
         var subject = claims.get("sub");
         var expiration = claims.get("exp");
@@ -69,9 +66,9 @@ public class JwtService {
 
     private boolean hasValidSignature(String token) {
         var parts = token.split("\\.");
-        if (parts.length != 3) {
+        if (parts.length != 3)
             return false;
-        }
+
         var unsignedToken = parts[0] + "." + parts[1];
         return MessageDigest.isEqual(sign(unsignedToken).getBytes(StandardCharsets.UTF_8),
                 parts[2].getBytes(StandardCharsets.UTF_8));
@@ -101,8 +98,7 @@ public class JwtService {
         try {
             var mac = Mac.getInstance(HMAC_ALGORITHM);
             mac.init(new SecretKeySpec(this.secret, HMAC_ALGORITHM));
-            return Base64.getUrlEncoder().withoutPadding()
-                    .encodeToString(mac.doFinal(value.getBytes(StandardCharsets.UTF_8)));
+            return Base64.getUrlEncoder().withoutPadding().encodeToString(mac.doFinal(value.getBytes(StandardCharsets.UTF_8)));
         } catch (Exception ex) {
             throw new IllegalStateException("Could not sign JWT", ex);
         }

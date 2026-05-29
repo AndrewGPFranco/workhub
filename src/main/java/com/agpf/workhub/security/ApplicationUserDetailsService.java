@@ -2,6 +2,7 @@ package com.agpf.workhub.security;
 
 import com.agpf.workhub.repositories.UserRepository;
 
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -18,9 +19,9 @@ public class ApplicationUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String email) {
-        var user = this.userRepository.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException("Usuário não encontrado!"));
+        var user = this.userRepository.findByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException("Usuário não encontrado!"));
 
-        return org.springframework.security.core.userdetails.User
-                .withUsername(user.getEmail()).password(user.getPasswordHash()).roles(user.getRole()).build();
+        return User.withUsername(user.getEmail()).password(user.getPasswordHash()).roles(user.getRole()).build();
     }
 }
