@@ -5,10 +5,9 @@ spring:
     url: jdbc:postgresql://localhost:5432/${DB:workhub-db}
     username: ${USER_DB:workhub}
     password: ${PASSWORD_DB:workhub}
-  security:
-    oauth2:
-      resourceserver:
-        jwt:
-          issuer-uri: ${KEYCLOAK_ISSUER_URI:http://localhost:8080/realms/workhub}
+auth:
+  jwt:
+    secret: ${JWT_SECRET:workhub-local-development-secret-change-me-please}
+    expiration-minutes: ${JWT_EXPIRATION_MINUTES:120}
 server:
   port: 8090
