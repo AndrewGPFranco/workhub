@@ -47,17 +47,13 @@ public class AuthService {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Username already registered");
 
         var now = LocalDateTime.now();
-        var user = new User();
-        user.setEmail(request.email());
-        user.setUsername(request.username());
-        user.setFirstName(request.firstName());
-        user.setLastName(request.lastName());
-        user.setPasswordHash(this.passwordEncoder.encode(request.password()));
-        user.setRole(DEFAULT_ROLE);
-        user.setCreatedAt(now);
-        user.setUpdatedAt(now);
 
-        var savedUser = this.userRepository.save(user);
+        var savedUser = this.userRepository.save(User.builder()
+                .email(request.email()).username(request.username()).firstName(request.firstName())
+                .lastName(request.lastName()).passwordHash(this.passwordEncoder.encode(request.password()))
+                .role(DEFAULT_ROLE).createdAt(now).updatedAt(now)
+                .build());
+
         return responseFor(savedUser);
     }
 

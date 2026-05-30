@@ -3,6 +3,7 @@ package com.agpf.workhub.rest;
 import jakarta.validation.Valid;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,8 +27,8 @@ public class AuthController {
 
     @PostMapping("/register")
     @ResponseStatus(HttpStatus.CREATED)
-    AuthResponseDTO register(@Valid @RequestBody RegisterRequestDTO request) {
-        return this.authService.register(request);
+    ResponseEntity<AuthResponseDTO> register(@Valid @RequestBody RegisterRequestDTO request) {
+        return ResponseEntity.ok().body(this.authService.register(request));
     }
 
     @PostMapping("/login")
