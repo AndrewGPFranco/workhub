@@ -1,4 +1,4 @@
-package com.agpf.workhub.auth;
+package com.agpf.workhub.rest;
 
 import jakarta.validation.Valid;
 
@@ -8,6 +8,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.agpf.workhub.dtos.AuthResponseDTO;
+import com.agpf.workhub.dtos.LoginRequestDTO;
+import com.agpf.workhub.dtos.RegisterRequestDTO;
+import com.agpf.workhub.services.AuthService;
 
 @RestController
 @RequestMapping("/auth")
@@ -21,12 +26,12 @@ public class AuthController {
 
     @PostMapping("/register")
     @ResponseStatus(HttpStatus.CREATED)
-    AuthResponse register(@Valid @RequestBody RegisterRequest request) {
+    AuthResponseDTO register(@Valid @RequestBody RegisterRequestDTO request) {
         return this.authService.register(request);
     }
 
     @PostMapping("/login")
-    AuthResponse login(@Valid @RequestBody LoginRequest request) {
+    AuthResponseDTO login(@Valid @RequestBody LoginRequestDTO request) {
         return this.authService.login(request);
     }
 }
