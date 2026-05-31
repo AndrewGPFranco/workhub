@@ -60,4 +60,7 @@ public class Demand {
     @Column(name = "priority", nullable = false, length = 20)
     private PriorityDemandType priority;
 
+    @Column(name = "observation_to_review", nullable = true, length = 2500, columnDefinition = "TEXT")
+    private String observationToReview;
+
 }

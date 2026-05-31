@@ -15,12 +15,13 @@ public record RegisterDemandDTO(
         @NotBlank String description,
         LocalDate deadline,
         @NotNull StatusDemandType status,
-        @NotNull PriorityDemandType priority
+        @NotNull PriorityDemandType priority,
+        String observationToReview
 ) {
 
     public Demand toEntity(User user) {
         return Demand.builder().user(user).title(title).createdAt(LocalDateTime.now()).updatedAt(null)
-                .description(description).deadline(deadline).status(status).priority(priority).build();
+                .observationToReview(observationToReview).description(description).deadline(deadline).status(status).priority(priority).build();
     }
 
 }
