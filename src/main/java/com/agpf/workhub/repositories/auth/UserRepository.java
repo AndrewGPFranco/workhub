@@ -1,4 +1,4 @@
-package com.agpf.workhub.repositories;
+package com.agpf.workhub.repositories.auth;
 
 import java.util.Optional;
 

@@ -1,4 +1,4 @@
-package com.agpf.workhub.rest;
+package com.agpf.workhub.rest.auth;
 
 import jakarta.validation.Valid;
 

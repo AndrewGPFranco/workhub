@@ -1,6 +1,6 @@
 package com.agpf.workhub.services.auth;
 
-import com.agpf.workhub.repositories.UserRepository;
+import com.agpf.workhub.repositories.auth.UserRepository;
 
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
