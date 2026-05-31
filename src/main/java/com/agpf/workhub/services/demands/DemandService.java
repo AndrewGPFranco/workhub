@@ -3,6 +3,7 @@ package com.agpf.workhub.services.demands;
 import com.agpf.workhub.dtos.demands.EditDemandDTO;
 import com.agpf.workhub.dtos.demands.OutputDemandDTO;
 import com.agpf.workhub.dtos.demands.RegisterDemandDTO;
+import com.agpf.workhub.dtos.http.PageResponseDTO;
 import com.agpf.workhub.exceptions.BusinessException;
 import com.agpf.workhub.exceptions.NotFoundException;
 import com.agpf.workhub.models.demands.Demand;
@@ -14,7 +15,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -36,12 +36,14 @@ public class DemandService {
         return String.format("Demanda: '%s' foi registrada com sucesso!", saved.getTitle());
     }
 
-    public List<OutputDemandDTO> getByUser(int page, String email) {
+    public PageResponseDTO<OutputDemandDTO> getByUser(int page, String email) {
         var user = userRepository.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException(USER_NOT_FOUND));
 
-        var demands = demandRepository.getDemandsByUser(user.getId(), PageRequest.of(page, 5));
+        var demands = demandRepository
+                .findByUserIdOrderByCreatedAtDesc(user.getId(), PageRequest.of(page, 5))
+                .map(OutputDemandDTO::fromEntity);
 
-        return demands.stream().map(OutputDemandDTO::fromEntity).toList();
+        return PageResponseDTO.fromPage(demands);
     }
 
     @Transactional
@@ -70,8 +72,7 @@ public class DemandService {
     public void deleteDemand(UUID idDemand, String email) {
         Demand demand = demandRepository.findById(idDemand).orElseThrow(() -> new NotFoundException("Demanda não encontrada!"));
 
-        var user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new UsernameNotFoundException(USER_NOT_FOUND));
+        var user = userRepository.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException(USER_NOT_FOUND));
 
         if (!demand.getUser().equals(user))
             throw new BusinessException(
