@@ -4,6 +4,39 @@ target/
 !**/src/main/**/target/
 !**/src/test/**/target/
 
+### Local environment ###
+.env
+.env.*
+!.env.example
+application-local.yaml
+application-local.yml
+application-local.properties
+
+### Keycloak local config ###
+keycloak/data/
+keycloak/conf/
+keycloak/themes/
+keycloak/*.json
+keycloak/*.local.json
+keycloak/*-local.json
+keycloak/*secret*.json
+keycloak/*credentials*.json
+
+### Logs ###
+*.log
+logs/
+
+### Runtime files ###
+*.pid
+*.seed
+*.tmp
+*.swp
+.DS_Store
+
+### Local assistant/editor metadata ###
+.aiassistant/
+.codex/
+
 ### STS ###
 .apt_generated
 .classpath

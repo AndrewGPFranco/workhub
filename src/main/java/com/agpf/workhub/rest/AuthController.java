@@ -1,0 +1,38 @@
+package com.agpf.workhub.rest;
+
+import jakarta.validation.Valid;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.agpf.workhub.dtos.AuthResponseDTO;
+import com.agpf.workhub.dtos.LoginRequestDTO;
+import com.agpf.workhub.dtos.RegisterRequestDTO;
+import com.agpf.workhub.services.AuthService;
+
+@RestController
+@RequestMapping("/auth")
+public class AuthController {
+
+    private final AuthService authService;
+
+    public AuthController(AuthService authService) {
+        this.authService = authService;
+    }
+
+    @PostMapping("/register")
+    @ResponseStatus(HttpStatus.CREATED)
+    ResponseEntity<AuthResponseDTO> register(@Valid @RequestBody RegisterRequestDTO request) {
+        return ResponseEntity.ok().body(this.authService.register(request));
+    }
+
+    @PostMapping("/login")
+    ResponseEntity<AuthResponseDTO> login(@Valid @RequestBody LoginRequestDTO request) {
+        return ResponseEntity.ok().body(this.authService.login(request));
+    }
+}
