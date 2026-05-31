@@ -10,7 +10,6 @@ import com.agpf.workhub.repositories.auth.UserRepository;
 import com.agpf.workhub.repositories.demands.DemandRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,10 +23,11 @@ public class DemandService {
 
     private final UserRepository userRepository;
     private final DemandRepository demandRepository;
+    private static final String USER_NOT_FOUND = "Usuário não encontrado!";
 
     @Transactional
     public String createDemand(RegisterDemandDTO dto, String email) {
-        var user = userRepository.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException("Usuário não encontrado!"));
+        var user = userRepository.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException(USER_NOT_FOUND));
 
         var demand = dto.toEntity(user);
 
@@ -37,9 +37,9 @@ public class DemandService {
     }
 
     public List<OutputDemandDTO> getByUser(int page, String email) {
-        var user = userRepository.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException("Usuário não encontrado!"));
+        var user = userRepository.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException(USER_NOT_FOUND));
 
-        var demands = demandRepository.getDemandsByUser(user.getId(), PageRequest.of(page, 10));
+        var demands = demandRepository.getDemandsByUser(user.getId(), PageRequest.of(page, 5));
 
         return demands.stream().map(OutputDemandDTO::fromEntity).toList();
     }
@@ -49,7 +49,7 @@ public class DemandService {
         var demand = demandRepository.findById(idDemand).orElseThrow(() -> new NotFoundException("Demanda não encontrada!"));
 
         var user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new UsernameNotFoundException("Usuário não encontrado!"));
+                .orElseThrow(() -> new UsernameNotFoundException(USER_NOT_FOUND));
 
         if (!demand.getUser().equals(user))
             throw new BusinessException(
@@ -71,7 +71,7 @@ public class DemandService {
         Demand demand = demandRepository.findById(idDemand).orElseThrow(() -> new NotFoundException("Demanda não encontrada!"));
 
         var user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new UsernameNotFoundException("Usuário não encontrado!"));
+                .orElseThrow(() -> new UsernameNotFoundException(USER_NOT_FOUND));
 
         if (!demand.getUser().equals(user))
             throw new BusinessException(

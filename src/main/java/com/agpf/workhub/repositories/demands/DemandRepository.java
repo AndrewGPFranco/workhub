@@ -1,7 +1,5 @@
 package com.agpf.workhub.repositories.demands;
 
-import com.agpf.workhub.dtos.demands.OutputDemandDTO;
-import com.agpf.workhub.models.auth.User;
 import com.agpf.workhub.models.demands.Demand;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
