@@ -21,7 +21,7 @@ public record RegisterDemandDTO(
 
     public Demand toEntity(User user) {
         return Demand.builder().user(user).title(title).createdAt(LocalDateTime.now()).updatedAt(null)
-                .observationToReview(observationToReview).description(description).deadline(deadline).status(status).priority(priority).build();
+                .observationsToReview(observationToReview).description(description).deadline(deadline).status(status).priority(priority).build();
     }
 
 }
