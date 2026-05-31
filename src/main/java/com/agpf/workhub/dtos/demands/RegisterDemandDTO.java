@@ -8,6 +8,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 public record RegisterDemandDTO(
         @NotBlank String title,
@@ -18,7 +19,7 @@ public record RegisterDemandDTO(
 ) {
 
     public Demand toEntity(User user) {
-        return Demand.builder().user(user).title(title)
+        return Demand.builder().user(user).title(title).createdAt(LocalDateTime.now()).updatedAt(null)
                 .description(description).deadline(deadline).status(status).priority(priority).build();
     }
 

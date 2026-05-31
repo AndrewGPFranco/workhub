@@ -1,9 +1,10 @@
 package com.agpf.workhub.rest.demands;
 
 import com.agpf.workhub.dtos.demands.RegisterDemandDTO;
-import com.agpf.workhub.models.auth.User;
+import com.agpf.workhub.dtos.http.ResponseAPI;
 import com.agpf.workhub.services.demands.DemandService;
 import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -22,9 +23,10 @@ public class DemandController {
     }
 
     @PostMapping(value = "/register")
-    ResponseEntity<String> register(@Valid @RequestBody RegisterDemandDTO dto, @AuthenticationPrincipal User user) {
-        String response = demandService.createDemand(dto, user);
-        return ResponseEntity.ok().body(response);
+    ResponseEntity<ResponseAPI> register(@Valid @RequestBody RegisterDemandDTO dto,
+                                         @AuthenticationPrincipal(expression = "username") String email) {
+        String response = demandService.createDemand(dto, email);
+        return ResponseEntity.status(HttpStatus.CREATED.value()).body(new ResponseAPI(HttpStatus.CREATED.value(), response));
     }
 
 }

@@ -5,6 +5,7 @@ import com.agpf.workhub.dtos.demands.RegisterDemandDTO;
 import com.agpf.workhub.enums.demands.PriorityDemandType;
 import com.agpf.workhub.enums.demands.StatusDemandType;
 import com.agpf.workhub.models.demands.Demand;
+import com.agpf.workhub.repositories.auth.UserRepository;
 import com.agpf.workhub.repositories.demands.DemandRepository;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.Test;
@@ -13,6 +14,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
@@ -26,6 +29,9 @@ class DemandServiceTest extends BaseTest {
     @Mock
     private DemandRepository demandRepository;
 
+    @Mock
+    private UserRepository userRepository;
+
     private RegisterDemandDTO factoryDemandDTO() {
         return new RegisterDemandDTO("Demanda importante", "Programar utilizando TDD",
                 null, StatusDemandType.ONGOING, PriorityDemandType.URGENT);
@@ -34,10 +40,12 @@ class DemandServiceTest extends BaseTest {
     @Test
     void testCreateDemand() {
         var demandDto = factoryDemandDTO();
+        var user = getUser();
 
+        Mockito.when(userRepository.findByEmail(user.getEmail())).thenReturn(Optional.of(user));
         Mockito.when(demandRepository.save(any(Demand.class))).thenReturn(getDemand());
 
-        var demand = demandService.createDemand(demandDto, getUser());
+        var demand = demandService.createDemand(demandDto, user.getEmail());
 
         var demandCaptor = ArgumentCaptor.forClass(Demand.class);
         Mockito.verify(demandRepository).save(demandCaptor.capture());
@@ -47,6 +55,7 @@ class DemandServiceTest extends BaseTest {
         assertEquals("Programar utilizando TDD", savedDemand.getDescription());
         assertEquals(StatusDemandType.ONGOING, savedDemand.getStatus());
         assertEquals(PriorityDemandType.URGENT, savedDemand.getPriority());
+        assertEquals(user, savedDemand.getUser());
         assertEquals("Demanda: Demanda importante foi registrada com sucesso!", demand);
     }
 
