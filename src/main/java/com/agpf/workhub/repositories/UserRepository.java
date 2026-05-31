@@ -4,7 +4,7 @@ import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import com.agpf.workhub.models.User;
+import com.agpf.workhub.models.auth.User;
 
 public interface UserRepository extends JpaRepository<User, Long> {
 

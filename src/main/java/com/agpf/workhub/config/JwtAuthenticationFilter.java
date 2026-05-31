@@ -1,7 +1,8 @@
-package com.agpf.workhub.security;
+package com.agpf.workhub.config;
 
 import java.io.IOException;
 
+import com.agpf.workhub.services.auth.JwtService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

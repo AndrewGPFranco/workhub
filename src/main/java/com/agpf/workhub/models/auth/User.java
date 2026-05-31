@@ -1,4 +1,4 @@
-package com.agpf.workhub.models;
+package com.agpf.workhub.models.auth;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;

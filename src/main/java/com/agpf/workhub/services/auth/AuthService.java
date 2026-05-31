@@ -1,4 +1,4 @@
-package com.agpf.workhub.services;
+package com.agpf.workhub.services.auth;
 
 import java.time.LocalDateTime;
 
@@ -10,13 +10,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
-import com.agpf.workhub.dtos.AuthResponseDTO;
-import com.agpf.workhub.dtos.LoginRequestDTO;
-import com.agpf.workhub.dtos.RegisterRequestDTO;
-import com.agpf.workhub.dtos.UserResponseDTO;
-import com.agpf.workhub.models.User;
+import com.agpf.workhub.dtos.auth.AuthResponseDTO;
+import com.agpf.workhub.dtos.auth.LoginRequestDTO;
+import com.agpf.workhub.dtos.auth.RegisterRequestDTO;
+import com.agpf.workhub.dtos.auth.UserResponseDTO;
+import com.agpf.workhub.models.auth.User;
 import com.agpf.workhub.repositories.UserRepository;
-import com.agpf.workhub.security.JwtService;
 
 @Service
 public class AuthService {

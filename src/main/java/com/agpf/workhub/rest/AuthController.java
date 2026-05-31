@@ -10,10 +10,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.agpf.workhub.dtos.AuthResponseDTO;
-import com.agpf.workhub.dtos.LoginRequestDTO;
-import com.agpf.workhub.dtos.RegisterRequestDTO;
-import com.agpf.workhub.services.AuthService;
+import com.agpf.workhub.dtos.auth.AuthResponseDTO;
+import com.agpf.workhub.dtos.auth.LoginRequestDTO;
+import com.agpf.workhub.dtos.auth.RegisterRequestDTO;
+import com.agpf.workhub.services.auth.AuthService;
 
 @RestController
 @RequestMapping("/auth")

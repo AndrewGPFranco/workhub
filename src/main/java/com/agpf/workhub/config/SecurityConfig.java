@@ -1,7 +1,5 @@
 package com.agpf.workhub.config;
 
-import com.agpf.workhub.security.JwtAuthenticationFilter;
-
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;

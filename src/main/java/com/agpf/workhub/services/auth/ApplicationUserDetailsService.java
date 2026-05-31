@@ -1,4 +1,4 @@
-package com.agpf.workhub.security;
+package com.agpf.workhub.services.auth;
 
 import com.agpf.workhub.repositories.UserRepository;
 
