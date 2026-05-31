@@ -48,12 +48,13 @@ public class DemandService {
     public void editDemand(UUID idDemand, EditDemandDTO dto, String email) {
         var demand = demandRepository.findById(idDemand).orElseThrow(() -> new NotFoundException("Demanda não encontrada!"));
 
-        userRepository.findByEmail(email).ifPresent(user -> {
-            if (!demand.getUser().equals(user))
-                throw new BusinessException(
-                        String.format("A demanda com título: %s informada não pertence ao usuário: %s", demand.getTitle(), user.getUsername())
-                );
-        });
+        var user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException("Usuário não encontrado!"));
+
+        if (!demand.getUser().equals(user))
+            throw new BusinessException(
+                    String.format("A demanda com título: %s informada não pertence ao usuário: %s", demand.getTitle(), user.getUsername())
+            );
 
         demand.setTitle(dto.title());
         demand.setDescription(dto.description());
@@ -69,12 +70,13 @@ public class DemandService {
     public void deleteDemand(UUID idDemand, String email) {
         Demand demand = demandRepository.findById(idDemand).orElseThrow(() -> new NotFoundException("Demanda não encontrada!"));
 
-        userRepository.findByEmail(email).ifPresent(user -> {
-            if (!demand.getUser().equals(user))
-                throw new BusinessException(
-                        String.format("A demanda com título: %s informada não pertence ao usuário: %s", demand.getTitle(), user.getUsername())
-                );
-        });
+        var user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException("Usuário não encontrado!"));
+
+        if (!demand.getUser().equals(user))
+            throw new BusinessException(
+                    String.format("A demanda com título: %s informada não pertence ao usuário: %s", demand.getTitle(), user.getUsername())
+            );
 
         demandRepository.deleteById(idDemand);
     }

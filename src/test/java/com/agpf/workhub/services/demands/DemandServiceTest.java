@@ -67,6 +67,7 @@ class DemandServiceTest extends BaseTest {
                 StatusDemandType.DONE, "Entregue no prazo.", PriorityDemandType.HIGH);
 
         Mockito.when(demandRepository.findById(demand.getId())).thenReturn(Optional.of(demand));
+        Mockito.when(userRepository.findByEmail(demand.getUser().getEmail())).thenReturn(Optional.of(demand.getUser()));
 
         demandService.editDemand(demand.getId(), dto, demand.getUser().getEmail());
 
