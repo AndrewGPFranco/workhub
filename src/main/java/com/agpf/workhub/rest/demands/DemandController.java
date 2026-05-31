@@ -25,7 +25,7 @@ public class DemandController {
     @PostMapping(value = "/register")
     ResponseEntity<ResponseAPI> register(@Valid @RequestBody RegisterDemandDTO dto,
                                          @AuthenticationPrincipal(expression = "username") String email) {
-        String response = demandService.createDemand(dto, email);
+        var response = demandService.createDemand(dto, email);
         return ResponseEntity.status(HttpStatus.CREATED.value()).body(new ResponseAPI(HttpStatus.CREATED.value(), response));
     }
 
