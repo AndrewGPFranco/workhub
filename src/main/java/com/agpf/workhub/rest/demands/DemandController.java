@@ -38,8 +38,15 @@ public class DemandController {
     ResponseEntity<ResponseAPI> editDemand(@PathVariable(name = "id") UUID idDemand,
                                            @RequestBody EditDemandDTO dto,
                                            @AuthenticationPrincipal(expression = "username") String email) {
-        var response = demandService.editDemand(idDemand, dto, email);
-        return ResponseEntity.ok(new ResponseAPI(HttpStatus.OK.value(), response));
+        demandService.editDemand(idDemand, dto, email);
+        return ResponseEntity.ok(new ResponseAPI(HttpStatus.OK.value(), "Demanda editada com sucesso!"));
+    }
+
+    @DeleteMapping(value = "/delete/{id}")
+    ResponseEntity<ResponseAPI> deleteDemand(@PathVariable(name = "id") UUID idDemand,
+                                             @AuthenticationPrincipal(expression = "username") String email) {
+        demandService.deleteDemand(idDemand, email);
+        return ResponseEntity.ok(new ResponseAPI(HttpStatus.OK.value(), "Demanda deletada com sucesso!"));
     }
 
 }

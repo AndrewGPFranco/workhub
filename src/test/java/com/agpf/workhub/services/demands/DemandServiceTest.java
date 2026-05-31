@@ -68,15 +68,26 @@ class DemandServiceTest extends BaseTest {
 
         Mockito.when(demandRepository.findById(demand.getId())).thenReturn(Optional.of(demand));
 
-        var response = demandService.editDemand(demand.getId(), dto, demand.getUser().getEmail());
+        demandService.editDemand(demand.getId(), dto, demand.getUser().getEmail());
 
-        assertEquals("Demanda editada com sucesso!", response);
         assertEquals("Demanda atualizada", demand.getTitle());
         assertEquals("Descrição atualizada", demand.getDescription());
         assertEquals(StatusDemandType.DONE, demand.getStatus());
         assertEquals("Entregue no prazo.", demand.getObservationsToReview());
         assertEquals(PriorityDemandType.HIGH, demand.getPriority());
         Mockito.verify(demandRepository).save(demand);
+    }
+
+    @Test
+    void testDeleteDemand() {
+        var demand = getDemand();
+
+        Mockito.when(demandRepository.findById(demand.getId())).thenReturn(Optional.of(demand));
+        Mockito.when(userRepository.findByEmail(demand.getUser().getEmail())).thenReturn(Optional.of(demand.getUser()));
+
+        demandService.deleteDemand(demand.getId(), demand.getUser().getEmail());
+
+        Mockito.verify(demandRepository).deleteById(demand.getId());
     }
 
 }
