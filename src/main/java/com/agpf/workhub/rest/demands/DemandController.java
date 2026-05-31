@@ -1,5 +1,6 @@
 package com.agpf.workhub.rest.demands;
 
+import com.agpf.workhub.dtos.demands.EditDemandDTO;
 import com.agpf.workhub.dtos.demands.RegisterDemandDTO;
 import com.agpf.workhub.dtos.http.ResponseAPI;
 import com.agpf.workhub.services.demands.DemandService;
@@ -9,6 +10,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
@@ -28,6 +31,14 @@ public class DemandController {
     ResponseEntity<ResponseAPI> getByUser(@RequestParam(name = "page") int page,
                                           @AuthenticationPrincipal(expression = "username") String email) {
         var response = demandService.getByUser(page, email);
+        return ResponseEntity.ok(new ResponseAPI(HttpStatus.OK.value(), response));
+    }
+
+    @PatchMapping(value = "/edit/{id}")
+    ResponseEntity<ResponseAPI> editDemand(@PathVariable(name = "id") UUID idDemand,
+                                           @RequestBody EditDemandDTO dto,
+                                           @AuthenticationPrincipal(expression = "username") String email) {
+        var response = demandService.editDemand(idDemand, dto, email);
         return ResponseEntity.ok(new ResponseAPI(HttpStatus.OK.value(), response));
     }
 

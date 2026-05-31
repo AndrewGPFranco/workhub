@@ -1,6 +1,7 @@
 package com.agpf.workhub.services.demands;
 
 import com.agpf.workhub.BaseTest;
+import com.agpf.workhub.dtos.demands.EditDemandDTO;
 import com.agpf.workhub.dtos.demands.RegisterDemandDTO;
 import com.agpf.workhub.enums.demands.PriorityDemandType;
 import com.agpf.workhub.enums.demands.StatusDemandType;
@@ -34,7 +35,7 @@ class DemandServiceTest extends BaseTest {
 
     private RegisterDemandDTO factoryDemandDTO() {
         return new RegisterDemandDTO("Demanda importante", "Programar utilizando TDD",
-                null, StatusDemandType.ONGOING, PriorityDemandType.URGENT);
+                null, StatusDemandType.ONGOING, PriorityDemandType.URGENT, null);
     }
 
     @Test
@@ -56,7 +57,26 @@ class DemandServiceTest extends BaseTest {
         assertEquals(StatusDemandType.ONGOING, savedDemand.getStatus());
         assertEquals(PriorityDemandType.URGENT, savedDemand.getPriority());
         assertEquals(user, savedDemand.getUser());
-        assertEquals("Demanda: Demanda importante foi registrada com sucesso!", demand);
+        assertEquals("Demanda: 'Demanda importante' foi registrada com sucesso!", demand);
+    }
+
+    @Test
+    void testEditDemand() {
+        var demand = getDemand();
+        var dto = new EditDemandDTO("Demanda atualizada", "Descrição atualizada", null,
+                StatusDemandType.DONE, "Entregue no prazo.", PriorityDemandType.HIGH);
+
+        Mockito.when(demandRepository.findById(demand.getId())).thenReturn(Optional.of(demand));
+
+        var response = demandService.editDemand(demand.getId(), dto, demand.getUser().getEmail());
+
+        assertEquals("Demanda editada com sucesso!", response);
+        assertEquals("Demanda atualizada", demand.getTitle());
+        assertEquals("Descrição atualizada", demand.getDescription());
+        assertEquals(StatusDemandType.DONE, demand.getStatus());
+        assertEquals("Entregue no prazo.", demand.getObservationsToReview());
+        assertEquals(PriorityDemandType.HIGH, demand.getPriority());
+        Mockito.verify(demandRepository).save(demand);
     }
 
 }

@@ -20,14 +20,15 @@ public record OutputDemandDTO(
         @NotNull StatusDemandType status,
         @NotNull PriorityDemandType priority,
         @NotNull LocalDateTime createdAt,
-        LocalDateTime updatedAt
+        LocalDateTime updatedAt,
+        String observationsToReview
 ) {
 
     public static OutputDemandDTO fromEntity(Demand demand) {
         return OutputDemandDTO.builder().id(demand.getId()).title(demand.getTitle())
                 .description(demand.getDescription()).deadline(demand.getDeadline())
                 .status(demand.getStatus()).priority(demand.getPriority()).createdAt(demand.getCreatedAt())
-                .updatedAt(demand.getUpdatedAt()).build();
+                .updatedAt(demand.getUpdatedAt()).observationsToReview(demand.getObservationsToReview()).build();
     }
 
 }
