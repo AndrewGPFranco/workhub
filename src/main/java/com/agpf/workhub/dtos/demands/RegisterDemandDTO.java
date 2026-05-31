@@ -12,7 +12,7 @@ import java.time.LocalDate;
 public record RegisterDemandDTO(
         @NotBlank String title,
         @NotBlank String description,
-        @NotNull LocalDate deadline,
+        LocalDate deadline,
         @NotNull StatusDemandType status,
         @NotNull PriorityDemandType priority
 ) {
