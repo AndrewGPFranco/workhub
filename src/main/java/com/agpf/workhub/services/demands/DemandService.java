@@ -4,6 +4,7 @@ import com.agpf.workhub.dtos.demands.EditDemandDTO;
 import com.agpf.workhub.dtos.demands.OutputDemandDTO;
 import com.agpf.workhub.dtos.demands.RegisterDemandDTO;
 import com.agpf.workhub.dtos.http.PageResponseDTO;
+import com.agpf.workhub.enums.demands.StatusDemandType;
 import com.agpf.workhub.exceptions.BusinessException;
 import com.agpf.workhub.exceptions.NotFoundException;
 import com.agpf.workhub.models.demands.Demand;
@@ -36,27 +37,24 @@ public class DemandService {
         return String.format("Demanda: '%s' foi registrada com sucesso!", saved.getTitle());
     }
 
-    public PageResponseDTO<OutputDemandDTO> getByUser(int page, String email) {
+    public PageResponseDTO<OutputDemandDTO> getByUser(int page, String email, StatusDemandType status) {
         var user = userRepository.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException(USER_NOT_FOUND));
 
-        var demands = demandRepository
-                .findByUserIdOrderByCreatedAtDesc(user.getId(), PageRequest.of(page, 5))
-                .map(OutputDemandDTO::fromEntity);
+        var demands = status == null ?
+                demandRepository.findByUserIdOrderByCreatedAtDesc(user.getId(), PageRequest.of(page, 5)) :
+                demandRepository.findByUserIdAndStatusOrderByCreatedAtDesc(user.getId(), status, PageRequest.of(page, 5));
 
-        return PageResponseDTO.fromPage(demands);
+        return PageResponseDTO.fromPage(demands.map(OutputDemandDTO::fromEntity));
     }
 
     @Transactional
     public void editDemand(UUID idDemand, EditDemandDTO dto, String email) {
         var demand = demandRepository.findById(idDemand).orElseThrow(() -> new NotFoundException("Demanda não encontrada!"));
 
-        var user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new UsernameNotFoundException(USER_NOT_FOUND));
+        var user = userRepository.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException(USER_NOT_FOUND));
 
         if (!demand.getUser().equals(user))
-            throw new BusinessException(
-                    String.format("A demanda com título: %s informada não pertence ao usuário: %s", demand.getTitle(), user.getUsername())
-            );
+            throw new BusinessException(String.format("A demanda com título: %s informada não pertence ao usuário: %s", demand.getTitle(), user.getUsername()));
 
         demand.setTitle(dto.title());
         demand.setDescription(dto.description());
@@ -75,9 +73,7 @@ public class DemandService {
         var user = userRepository.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException(USER_NOT_FOUND));
 
         if (!demand.getUser().equals(user))
-            throw new BusinessException(
-                    String.format("A demanda com título: %s informada não pertence ao usuário: %s", demand.getTitle(), user.getUsername())
-            );
+            throw new BusinessException(String.format("A demanda com título: %s informada não pertence ao usuário: %s", demand.getTitle(), user.getUsername()));
 
         demandRepository.deleteById(idDemand);
     }

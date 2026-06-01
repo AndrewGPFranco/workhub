@@ -3,6 +3,7 @@ package com.agpf.workhub.rest.demands;
 import com.agpf.workhub.dtos.demands.EditDemandDTO;
 import com.agpf.workhub.dtos.demands.RegisterDemandDTO;
 import com.agpf.workhub.dtos.http.ResponseAPI;
+import com.agpf.workhub.enums.demands.StatusDemandType;
 import com.agpf.workhub.services.demands.DemandService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -28,15 +29,14 @@ public class DemandController {
     }
 
     @GetMapping(value = "/by-user")
-    ResponseEntity<ResponseAPI> getByUser(@RequestParam(name = "page") int page,
+    ResponseEntity<ResponseAPI> getByUser(@RequestParam int page, @RequestParam(required = false) StatusDemandType status,
                                           @AuthenticationPrincipal(expression = "username") String email) {
-        var response = demandService.getByUser(page, email);
+        var response = demandService.getByUser(page, email, status);
         return ResponseEntity.ok(new ResponseAPI(HttpStatus.OK.value(), response));
     }
 
     @PatchMapping(value = "/edit/{id}")
-    ResponseEntity<ResponseAPI> editDemand(@PathVariable(name = "id") UUID idDemand,
-                                           @RequestBody EditDemandDTO dto,
+    ResponseEntity<ResponseAPI> editDemand(@PathVariable(name = "id") UUID idDemand, @RequestBody EditDemandDTO dto,
                                            @AuthenticationPrincipal(expression = "username") String email) {
         demandService.editDemand(idDemand, dto, email);
         return ResponseEntity.ok(new ResponseAPI(HttpStatus.OK.value(), "Demanda editada com sucesso!"));

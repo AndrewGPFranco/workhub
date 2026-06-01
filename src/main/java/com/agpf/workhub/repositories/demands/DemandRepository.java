@@ -1,5 +1,6 @@
 package com.agpf.workhub.repositories.demands;
 
+import com.agpf.workhub.enums.demands.StatusDemandType;
 import com.agpf.workhub.models.demands.Demand;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -10,6 +11,8 @@ import java.util.UUID;
 
 @Repository
 public interface DemandRepository extends JpaRepository<Demand, UUID> {
+
+    Page<Demand> findByUserIdAndStatusOrderByCreatedAtDesc(Long userId, StatusDemandType status, Pageable pageable);
 
     Page<Demand> findByUserIdOrderByCreatedAtDesc(Long userId, Pageable pageable);
 
