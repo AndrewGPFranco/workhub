@@ -4,6 +4,7 @@ import com.agpf.workhub.dtos.demands.EditDemandDTO;
 import com.agpf.workhub.dtos.demands.OutputDemandDTO;
 import com.agpf.workhub.dtos.demands.RegisterDemandDTO;
 import com.agpf.workhub.dtos.http.PageResponseDTO;
+import com.agpf.workhub.enums.demands.PriorityDemandType;
 import com.agpf.workhub.enums.demands.StatusDemandType;
 import com.agpf.workhub.exceptions.BusinessException;
 import com.agpf.workhub.exceptions.NotFoundException;
@@ -11,7 +12,9 @@ import com.agpf.workhub.models.demands.Demand;
 import com.agpf.workhub.repositories.auth.UserRepository;
 import com.agpf.workhub.repositories.demands.DemandRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -37,14 +40,23 @@ public class DemandService {
         return String.format("Demanda: '%s' foi registrada com sucesso!", saved.getTitle());
     }
 
-    public PageResponseDTO<OutputDemandDTO> getByUser(int page, String email, StatusDemandType status) {
+    public PageResponseDTO<OutputDemandDTO> getByUser(int page, String email, StatusDemandType status, PriorityDemandType priority) {
         var user = userRepository.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException(USER_NOT_FOUND));
 
-        var demands = status == null ?
-                demandRepository.findByUserIdOrderByCreatedAtDesc(user.getId(), PageRequest.of(page, 5)) :
-                demandRepository.findByUserIdAndStatusOrderByCreatedAtDesc(user.getId(), status, PageRequest.of(page, 5));
+        var demands = getDemandsFilter(user.getId(), status, PageRequest.of(page, 5), priority);
 
         return PageResponseDTO.fromPage(demands.map(OutputDemandDTO::fromEntity));
+    }
+
+    private Page<Demand> getDemandsFilter(Long userId, StatusDemandType status, Pageable pageable, PriorityDemandType priority) {
+        if (status == null && priority == null)
+            return demandRepository.findByUserIdOrderByCreatedAtDesc(userId, pageable);
+        else if (status != null && priority == null)
+            return demandRepository.findByUserIdAndStatusOrderByCreatedAtDesc(userId, status, pageable);
+        else if (status == null)
+            return demandRepository.findByUserIdAndPriorityOrderByCreatedAtDesc(userId, priority, pageable);
+
+        return demandRepository.findByUserIdAndPriorityAndStatusOrderByCreatedAtDesc(userId, priority, status, pageable);
     }
 
     @Transactional

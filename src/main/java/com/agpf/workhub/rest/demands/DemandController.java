@@ -3,6 +3,7 @@ package com.agpf.workhub.rest.demands;
 import com.agpf.workhub.dtos.demands.EditDemandDTO;
 import com.agpf.workhub.dtos.demands.RegisterDemandDTO;
 import com.agpf.workhub.dtos.http.ResponseAPI;
+import com.agpf.workhub.enums.demands.PriorityDemandType;
 import com.agpf.workhub.enums.demands.StatusDemandType;
 import com.agpf.workhub.services.demands.DemandService;
 import jakarta.validation.Valid;
@@ -29,9 +30,11 @@ public class DemandController {
     }
 
     @GetMapping(value = "/by-user")
-    ResponseEntity<ResponseAPI> getByUser(@RequestParam int page, @RequestParam(required = false) StatusDemandType status,
+    ResponseEntity<ResponseAPI> getByUser(@RequestParam int page,
+                                          @RequestParam(required = false) StatusDemandType status,
+                                          @RequestParam(required = false) PriorityDemandType priority,
                                           @AuthenticationPrincipal(expression = "username") String email) {
-        var response = demandService.getByUser(page, email, status);
+        var response = demandService.getByUser(page, email, status, priority);
         return ResponseEntity.ok(new ResponseAPI(HttpStatus.OK.value(), response));
     }
 
