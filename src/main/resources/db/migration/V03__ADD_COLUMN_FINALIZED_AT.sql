@@ -1,0 +1,1 @@
+alter table demands add column finalized_at date;

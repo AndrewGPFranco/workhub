@@ -9,3 +9,5 @@ auth:
   jwt:
     secret: ${JWT_SECRET:workhub-local-development-secret-change-me-please}
     expiration-minutes: ${JWT_EXPIRATION_MINUTES:120}
+server:
+  port: 9001

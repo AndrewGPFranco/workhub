@@ -11,6 +11,7 @@ public record EditDemandDTO(
         LocalDate deadline,
         StatusDemandType status,
         String observationsToReview,
-        PriorityDemandType priority
+        PriorityDemandType priority,
+        LocalDate finalizedAt
 ) {
 }
