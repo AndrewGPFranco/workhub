@@ -52,4 +52,11 @@ public class DemandController {
         return ResponseEntity.ok(new ResponseAPI(HttpStatus.OK.value(), "Demanda deletada com sucesso!"));
     }
 
+    @GetMapping(value = "/search")
+    ResponseEntity<ResponseAPI> searchDemand(@RequestParam String title,
+                                             @AuthenticationPrincipal(expression = "username") String email) {
+        var response = demandService.searchByDemand(title, email);
+        return ResponseEntity.ok(new ResponseAPI(HttpStatus.OK.value(), response));
+    }
+
 }

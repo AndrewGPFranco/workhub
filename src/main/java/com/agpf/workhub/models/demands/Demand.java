@@ -19,7 +19,9 @@ import java.util.UUID;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "demands")
+@Table(name = "demands", indexes = {
+        @Index(name = "idx_demands_title", columnList = "title")
+})
 public class Demand {
 
     @Id

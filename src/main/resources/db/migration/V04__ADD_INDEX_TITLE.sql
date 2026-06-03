@@ -1,0 +1,1 @@
+CREATE INDEX idx_demands_title on demands (title);

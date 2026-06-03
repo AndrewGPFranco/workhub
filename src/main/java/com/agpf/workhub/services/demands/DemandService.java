@@ -19,6 +19,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -98,4 +99,11 @@ public class DemandService {
         demandRepository.deleteById(idDemand);
     }
 
+    public List<OutputDemandDTO> searchByDemand(String title, String email) {
+        var user = userRepository.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException(USER_NOT_FOUND));
+
+        var demands = demandRepository.searchByDemand(title, user.getId());
+
+        return demands.stream().map(OutputDemandDTO::fromEntity).toList();
+    }
 }
