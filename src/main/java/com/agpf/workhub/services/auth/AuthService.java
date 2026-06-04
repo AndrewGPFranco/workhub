@@ -15,7 +15,7 @@ import com.agpf.workhub.dtos.auth.LoginRequestDTO;
 import com.agpf.workhub.dtos.auth.RegisterRequestDTO;
 import com.agpf.workhub.dtos.auth.UserResponseDTO;
 import com.agpf.workhub.models.user.User;
-import com.agpf.workhub.repositories.auth.UserRepository;
+import com.agpf.workhub.repositories.user.UserRepository;
 
 @Service
 public class AuthService {

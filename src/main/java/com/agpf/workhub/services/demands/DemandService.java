@@ -9,7 +9,7 @@ import com.agpf.workhub.enums.demands.StatusDemandType;
 import com.agpf.workhub.exceptions.BusinessException;
 import com.agpf.workhub.exceptions.NotFoundException;
 import com.agpf.workhub.models.demands.Demand;
-import com.agpf.workhub.repositories.auth.UserRepository;
+import com.agpf.workhub.repositories.user.UserRepository;
 import com.agpf.workhub.repositories.demands.DemandRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
