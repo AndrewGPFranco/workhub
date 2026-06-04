@@ -2,7 +2,7 @@ package com.agpf.workhub.models.demands;
 
 import com.agpf.workhub.enums.demands.PriorityDemandType;
 import com.agpf.workhub.enums.demands.StatusDemandType;
-import com.agpf.workhub.models.auth.User;
+import com.agpf.workhub.models.user.User;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;

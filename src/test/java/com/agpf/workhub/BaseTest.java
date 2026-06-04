@@ -2,7 +2,7 @@ package com.agpf.workhub;
 
 import com.agpf.workhub.enums.demands.PriorityDemandType;
 import com.agpf.workhub.enums.demands.StatusDemandType;
-import com.agpf.workhub.models.auth.User;
+import com.agpf.workhub.models.user.User;
 import com.agpf.workhub.models.demands.Demand;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 

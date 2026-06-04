@@ -66,8 +66,12 @@ public class DemandService {
 
         var user = userRepository.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException(USER_NOT_FOUND));
 
-        if (!demand.getUser().equals(user))
-            throw new BusinessException(String.format("A demanda com título: %s informada não pertence ao usuário: %s", demand.getTitle(), user.getUsername()));
+        if (!demand.getUser().equals(user)) {
+            throw new BusinessException(
+                    String.format("A demanda com título: %s informada não pertence ao usuário: %s",
+                            demand.getTitle(), user.getUsername())
+            );
+        }
 
         demand.setTitle(dto.title());
         demand.setDescription(dto.description());
