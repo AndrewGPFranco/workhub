@@ -22,17 +22,17 @@ public class Daily {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @NotNull(message = "É necessário informar a data do feedback!")
-    @Column(name = "date_feedback", nullable = false)
+    @NotNull(message = "É necessário informar a data do resumo!")
+    @Column(name = "date_summary", nullable = false)
     private LocalDate date;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    @NotNull(message = "É necessário informar a pessoa que aplicou o feedback!")
-    @Column(name = "people_feedback", nullable = false, length = 40)
-    private String peopleFeedback;
+    @NotNull(message = "É necessário informar um resumo do dia!")
+    @Column(name = "summary", nullable = false, columnDefinition = "TEXT")
+    private String summary;
 
     @NotNull
     @Column(name = "created_at", nullable = false)
