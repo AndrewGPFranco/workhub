@@ -1,7 +1,7 @@
 package com.agpf.workhub.services.user;
 
-import com.agpf.workhub.dtos.user.OutputDailyDTO;
-import com.agpf.workhub.dtos.user.RegisterDailyDTO;
+import com.agpf.workhub.dtos.user.daily.OutputDailyDTO;
+import com.agpf.workhub.dtos.user.daily.RegisterDailyDTO;
 import com.agpf.workhub.repositories.user.DailyRepository;
 import com.agpf.workhub.repositories.user.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -28,10 +28,10 @@ public class DailyService {
         return "Registro para a daily criada com sucesso!";
     }
 
-    public OutputDailyDTO getByUser(LocalDate dateFeedback, String email) {
+    public OutputDailyDTO getByUser(LocalDate date, String email) {
         var user = userRepository.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException(USER_NOT_FOUND));
 
-        var daily = dailyRepository.findByUserAndDateSummary(dateFeedback, user.getId());
+        var daily = dailyRepository.findByUserAndDateSummary(date, user.getId());
 
         if (daily == null)
             return null;

@@ -1,4 +1,4 @@
-package com.agpf.workhub.dtos.user;
+package com.agpf.workhub.dtos.user.daily;
 
 import com.agpf.workhub.models.user.Daily;
 
