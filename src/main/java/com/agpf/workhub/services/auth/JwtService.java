@@ -3,13 +3,14 @@ package com.agpf.workhub.services.auth;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.time.Instant;
-import java.util.Base64;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.*;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 
+import com.agpf.workhub.enums.plan.PlanResourceType;
+import com.agpf.workhub.models.user.User;
+import com.agpf.workhub.repositories.user.UserRepository;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -24,9 +25,11 @@ public class JwtService {
     private final byte[] secret;
     private final long expirationSeconds;
     private final ObjectMapper objectMapper;
+    private final UserRepository userRepository;
     private static final String HMAC_ALGORITHM = "HmacSHA256";
 
-    public JwtService(@Value("${auth.jwt.secret}") String secret, @Value("${auth.jwt.expiration-minutes}") long expirationMinutes) {
+    public JwtService(@Value("${auth.jwt.secret}") String secret, @Value("${auth.jwt.expiration-minutes}") long expirationMinutes, UserRepository userRepository) {
+        this.userRepository = userRepository;
         this.objectMapper = new ObjectMapper();
         this.secret = secret.getBytes(StandardCharsets.UTF_8);
         this.expirationSeconds = expirationMinutes * 60;
@@ -43,9 +46,19 @@ public class JwtService {
         claims.put("role", role);
         claims.put("iat", now.getEpochSecond());
         claims.put("exp", now.plusSeconds(this.expirationSeconds).getEpochSecond());
+        claims.put("resources", getResourcesOfUser(email));
 
         var unsignedToken = encodeJson(header) + "." + encodeJson(claims);
         return unsignedToken + "." + sign(unsignedToken);
+    }
+
+    private List<PlanResourceType> getResourcesOfUser(String email) {
+        Optional<User> user = userRepository.findByEmail(email);
+
+        if (user.isPresent())
+            return user.get().getContractedResources();
+
+        return Collections.emptyList();
     }
 
     public String extractSubject(String token) {
