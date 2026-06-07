@@ -1,11 +1,13 @@
 package com.agpf.workhub.models.user;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.Month;
 import java.util.UUID;
 
 @Setter
@@ -14,25 +16,30 @@ import java.util.UUID;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "daily")
-public class Daily {
+@Table(name = "feedbacks")
+public class Feedback {
 
     @Id
     @Column(name = "id", nullable = false)
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @NotNull(message = "É necessário informar a data do resumo!")
-    @Column(name = "date_summary", nullable = false)
+    @Column(name = "date_feedback", nullable = false)
+    @NotNull(message = "É necessário informar a data do feedback!")
     private LocalDate date;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "month", nullable = false)
+    @NotNull(message = "É necessário informar o mes do feedback!")
+    private Month month;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    @NotNull(message = "É necessário informar um resumo do dia!")
-    @Column(name = "summary", nullable = false, columnDefinition = "TEXT")
-    private String summary;
+    @NotBlank(message = "É necessário informar a pessoa que aplicou o feedback!")
+    @Column(name = "people_feedback", nullable = false)
+    private String peopleFeedback;
 
     @NotNull
     @Column(name = "created_at", nullable = false)
