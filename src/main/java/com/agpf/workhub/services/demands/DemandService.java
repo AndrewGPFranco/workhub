@@ -83,9 +83,6 @@ public class DemandService {
         if (dto.finalizedAt() != null) {
             demand.setStatus(StatusDemandType.DONE);
             demand.setFinalizedAt(dto.finalizedAt());
-        } else {
-            demand.setFinalizedAt(null);
-            demand.setStatus(StatusDemandType.PENDING);
         }
 
         demandRepository.save(demand);
