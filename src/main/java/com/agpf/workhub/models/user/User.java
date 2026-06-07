@@ -1,5 +1,6 @@
 package com.agpf.workhub.models.user;
 
+import com.agpf.workhub.enums.plan.PlanResourceType;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -8,6 +9,7 @@ import jakarta.validation.constraints.Size;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Setter
 @Getter
@@ -55,5 +57,11 @@ public class User {
 
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
+
+    @Column(name = "resources")
+    @Enumerated(EnumType.STRING)
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(name = "contracteds_resources", joinColumns = @JoinColumn(name = "user_id"))
+    private List<PlanResourceType> contractedResources;
 
 }

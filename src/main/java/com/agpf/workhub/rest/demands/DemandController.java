@@ -1,10 +1,12 @@
 package com.agpf.workhub.rest.demands;
 
+import com.agpf.workhub.annotations.PlanResource;
 import com.agpf.workhub.dtos.demands.EditDemandDTO;
 import com.agpf.workhub.dtos.demands.RegisterDemandDTO;
 import com.agpf.workhub.dtos.http.ResponseAPI;
 import com.agpf.workhub.enums.demands.PriorityDemandType;
 import com.agpf.workhub.enums.demands.StatusDemandType;
+import com.agpf.workhub.enums.plan.PlanResourceType;
 import com.agpf.workhub.services.demands.DemandService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +20,7 @@ import java.util.UUID;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping(value = "/demands")
+@PlanResource(verify = PlanResourceType.DEMANDS)
 public class DemandController {
 
     private final DemandService demandService;

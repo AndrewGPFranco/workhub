@@ -7,6 +7,7 @@ import com.agpf.workhub.models.demands.Demand;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.UUID;
 
 /**
@@ -23,7 +24,7 @@ public abstract class BaseTest {
     public User getUser() {
         return new User(1L, "email@gmail.com",
                 "username", bCryptPasswordEncoder.encode("minhasenha"),
-                "ADMIN", "Silva", "João", LocalDateTime.now(), null);
+                "ADMIN", "Silva", "João", LocalDateTime.now(), null, new ArrayList<>());
     }
 
     public Demand getDemand() {
