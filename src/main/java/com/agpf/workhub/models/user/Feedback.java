@@ -33,6 +33,10 @@ public class Feedback {
     @NotNull(message = "É necessário informar o mes do feedback!")
     private Month month;
 
+    @NotNull(message = "É necessário informar um feedback!")
+    @Column(name = "summary", nullable = false, columnDefinition = "TEXT")
+    private String summary;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;

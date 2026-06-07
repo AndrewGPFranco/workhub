@@ -5,6 +5,7 @@ CREATE TABLE IF NOT EXISTS feedbacks
     month           VARCHAR(20)                         NOT NULL,
     user_id         SERIAL                              NOT NULL,
     people_feedback VARCHAR(30)                         NOT NULL,
+    summary         TEXT                                NOT NULL,
     created_at      TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
     updated_at      TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users (id)

@@ -12,12 +12,13 @@ public record OutputFeedbackDTO(
         LocalDate date,
         Month month,
         String peopleFeedback,
+        String summary,
         LocalDateTime createdAt,
         LocalDateTime updatedAt
 ) {
     public static OutputFeedbackDTO fromEntity(Feedback feedback) {
         return new OutputFeedbackDTO(
-                feedback.getId(), feedback.getDate(), feedback.getMonth(),
+                feedback.getId(), feedback.getDate(), feedback.getMonth(), feedback.getSummary(),
                 feedback.getPeopleFeedback(), feedback.getCreatedAt(), feedback.getUpdatedAt()
         );
     }
