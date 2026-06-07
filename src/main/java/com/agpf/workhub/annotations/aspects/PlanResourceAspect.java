@@ -5,8 +5,10 @@ import com.agpf.workhub.exceptions.BusinessException;
 import com.agpf.workhub.exceptions.NotFoundException;
 import com.agpf.workhub.repositories.user.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
+import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -20,21 +22,31 @@ public class PlanResourceAspect {
 
     private final UserRepository userRepository;
 
-    @Before("@annotation(planResource)")
-    public void validate(PlanResource planResource) {
+    @Before("@annotation(com.agpf.workhub.annotations.PlanResource) || @within(com.agpf.workhub.annotations.PlanResource)")
+    public void validate(JoinPoint joinPoint) {
+        PlanResource planResource = getPlanResource(joinPoint);
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-        if (authentication != null) {
-            var user = userRepository.findByEmail(authentication.getName())
-                    .orElseThrow(() -> new NotFoundException("Usuário não encontrado!"));
+        if (authentication == null)
+            throw new BusinessException("Ocorreu um problema ao processar a solicitação!");
 
-            var allowed = user.getContractedResources().stream().anyMatch(r -> r.equals(planResource.verify()));
+        var user = userRepository.findByEmail(authentication.getName())
+                .orElseThrow(() -> new NotFoundException("Usuário não encontrado!"));
 
-            if (!allowed)
-                throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Recurso não disponível para o plano do usuário.");
-        }
+        var allowed = user.getContractedResources().stream().anyMatch(r -> r.equals(planResource.verify()));
 
-        throw new BusinessException("Ocorreu um problema ao processar a solicitação!");
+        if (!allowed)
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Recurso não disponível para o plano do usuário.");
+    }
+
+    private PlanResource getPlanResource(JoinPoint joinPoint) {
+        MethodSignature signature = (MethodSignature) joinPoint.getSignature();
+        PlanResource methodAnnotation = signature.getMethod().getAnnotation(PlanResource.class);
+
+        if (methodAnnotation != null)
+            return methodAnnotation;
+
+        return joinPoint.getTarget().getClass().getAnnotation(PlanResource.class);
     }
 
 }
