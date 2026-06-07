@@ -9,6 +9,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -28,14 +30,14 @@ public class DailyService {
         return "Registro para a daily criada com sucesso!";
     }
 
-    public OutputDailyDTO getByUser(LocalDate date, String email) {
+    public List<OutputDailyDTO> getByUser(LocalDate startDate, LocalDate endDate, String email) {
         var user = userRepository.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException(USER_NOT_FOUND));
 
-        var daily = dailyRepository.findByUserAndDateSummary(date, user.getId());
+        var daily = dailyRepository.findByUserBetweenDates(startDate, endDate, user.getId());
 
         if (daily == null)
-            return null;
+            return new ArrayList<>();
 
-        return OutputDailyDTO.fromEntity(daily);
+        return daily.stream().map(OutputDailyDTO::fromEntity).toList();
     }
 }

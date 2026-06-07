@@ -30,9 +30,10 @@ public class UserController {
     }
 
     @GetMapping(value = "/daily/by-user")
-    ResponseEntity<ResponseAPI> getDailyByUser(@RequestParam LocalDate dateFeedback,
+    ResponseEntity<ResponseAPI> getDailyByUser(@RequestParam("startDate") LocalDate startDate,
+                                               @RequestParam("endDate") LocalDate endDate,
                                                @AuthenticationPrincipal(expression = USERNAME) String email) {
-        var response = dailyService.getByUser(dateFeedback, email);
+        var response = dailyService.getByUser(startDate, endDate, email);
         return ResponseEntity.ok(new ResponseAPI(HttpStatus.OK.value(), response));
     }
 
