@@ -9,13 +9,12 @@ import com.agpf.workhub.enums.demands.StatusDemandType;
 import com.agpf.workhub.exceptions.BusinessException;
 import com.agpf.workhub.exceptions.NotFoundException;
 import com.agpf.workhub.models.demands.Demand;
-import com.agpf.workhub.repositories.user.UserRepository;
+import com.agpf.workhub.models.user.User;
 import com.agpf.workhub.repositories.demands.DemandRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,14 +25,10 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class DemandService {
 
-    private final UserRepository userRepository;
     private final DemandRepository demandRepository;
-    private static final String USER_NOT_FOUND = "Usuário não encontrado!";
 
     @Transactional
-    public String createDemand(RegisterDemandDTO dto, String email) {
-        var user = userRepository.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException(USER_NOT_FOUND));
-
+    public String createDemand(RegisterDemandDTO dto, User user) {
         var demand = dto.toEntity(user);
 
         var saved = demandRepository.save(demand);
@@ -41,9 +36,7 @@ public class DemandService {
         return String.format("Demanda: '%s' foi registrada com sucesso!", saved.getTitle());
     }
 
-    public PageResponseDTO<OutputDemandDTO> getByUser(int page, String email, StatusDemandType status, PriorityDemandType priority) {
-        var user = userRepository.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException(USER_NOT_FOUND));
-
+    public PageResponseDTO<OutputDemandDTO> getByUser(int page, User user, StatusDemandType status, PriorityDemandType priority) {
         var demands = getDemandsFilter(user.getId(), status, PageRequest.of(page, 5), priority);
 
         return PageResponseDTO.fromPage(demands.map(OutputDemandDTO::fromEntity));
@@ -61,12 +54,10 @@ public class DemandService {
     }
 
     @Transactional
-    public void editDemand(UUID idDemand, EditDemandDTO dto, String email) {
+    public void editDemand(UUID idDemand, EditDemandDTO dto, User user) {
         var demand = demandRepository.findById(idDemand).orElseThrow(() -> new NotFoundException("Demanda não encontrada!"));
 
-        var user = userRepository.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException(USER_NOT_FOUND));
-
-        if (!demand.getUser().equals(user)) {
+        if (!demand.getUser().getId().equals(user.getId())) {
             throw new BusinessException(
                     String.format("A demanda com título: %s informada não pertence ao usuário: %s",
                             demand.getTitle(), user.getUsername())
@@ -89,20 +80,16 @@ public class DemandService {
     }
 
     @Transactional
-    public void deleteDemand(UUID idDemand, String email) {
+    public void deleteDemand(UUID idDemand, User user) {
         Demand demand = demandRepository.findById(idDemand).orElseThrow(() -> new NotFoundException("Demanda não encontrada!"));
 
-        var user = userRepository.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException(USER_NOT_FOUND));
-
-        if (!demand.getUser().equals(user))
+        if (!demand.getUser().getId().equals(user.getId()))
             throw new BusinessException(String.format("A demanda com título: %s informada não pertence ao usuário: %s", demand.getTitle(), user.getUsername()));
 
         demandRepository.deleteById(idDemand);
     }
 
-    public List<OutputDemandDTO> searchByDemand(String title, String email) {
-        var user = userRepository.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException(USER_NOT_FOUND));
-
+    public List<OutputDemandDTO> searchByDemand(String title, User user) {
         var demands = demandRepository.searchByDemand(title, user.getId());
 
         return demands.stream().map(OutputDemandDTO::fromEntity).toList();

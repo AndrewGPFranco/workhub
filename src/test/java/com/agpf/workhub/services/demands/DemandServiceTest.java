@@ -6,7 +6,6 @@ import com.agpf.workhub.dtos.demands.RegisterDemandDTO;
 import com.agpf.workhub.enums.demands.PriorityDemandType;
 import com.agpf.workhub.enums.demands.StatusDemandType;
 import com.agpf.workhub.models.demands.Demand;
-import com.agpf.workhub.repositories.user.UserRepository;
 import com.agpf.workhub.repositories.demands.DemandRepository;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.Test;
@@ -30,9 +29,6 @@ class DemandServiceTest extends BaseTest {
     @Mock
     private DemandRepository demandRepository;
 
-    @Mock
-    private UserRepository userRepository;
-
     private RegisterDemandDTO factoryDemandDTO() {
         return new RegisterDemandDTO("Demanda importante", "Programar utilizando TDD",
                 null, StatusDemandType.ONGOING, PriorityDemandType.URGENT, null);
@@ -43,10 +39,9 @@ class DemandServiceTest extends BaseTest {
         var demandDto = factoryDemandDTO();
         var user = getUser();
 
-        Mockito.when(userRepository.findByEmail(user.getEmail())).thenReturn(Optional.of(user));
         Mockito.when(demandRepository.save(any(Demand.class))).thenReturn(getDemand());
 
-        var demand = demandService.createDemand(demandDto, user.getEmail());
+        var demand = demandService.createDemand(demandDto, user);
 
         var demandCaptor = ArgumentCaptor.forClass(Demand.class);
         Mockito.verify(demandRepository).save(demandCaptor.capture());
@@ -67,9 +62,8 @@ class DemandServiceTest extends BaseTest {
                 StatusDemandType.DONE, "Entregue no prazo.", PriorityDemandType.HIGH, null);
 
         Mockito.when(demandRepository.findById(demand.getId())).thenReturn(Optional.of(demand));
-        Mockito.when(userRepository.findByEmail(demand.getUser().getEmail())).thenReturn(Optional.of(demand.getUser()));
 
-        demandService.editDemand(demand.getId(), dto, demand.getUser().getEmail());
+        demandService.editDemand(demand.getId(), dto, demand.getUser());
 
         assertEquals("Demanda atualizada", demand.getTitle());
         assertEquals("Descrição atualizada", demand.getDescription());
@@ -84,9 +78,8 @@ class DemandServiceTest extends BaseTest {
         var demand = getDemand();
 
         Mockito.when(demandRepository.findById(demand.getId())).thenReturn(Optional.of(demand));
-        Mockito.when(userRepository.findByEmail(demand.getUser().getEmail())).thenReturn(Optional.of(demand.getUser()));
 
-        demandService.deleteDemand(demand.getId(), demand.getUser().getEmail());
+        demandService.deleteDemand(demand.getId(), demand.getUser());
 
         Mockito.verify(demandRepository).deleteById(demand.getId());
     }

@@ -2,9 +2,7 @@ package com.agpf.workhub.annotations.aspects;
 
 import com.agpf.workhub.annotations.PlanResource;
 import com.agpf.workhub.exceptions.BusinessException;
-import com.agpf.workhub.exceptions.NotFoundException;
-import com.agpf.workhub.repositories.user.UserRepository;
-import lombok.RequiredArgsConstructor;
+import com.agpf.workhub.models.user.User;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
@@ -17,10 +15,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 @Aspect
 @Component
-@RequiredArgsConstructor
 public class PlanResourceAspect {
-
-    private final UserRepository userRepository;
 
     @Before("@annotation(com.agpf.workhub.annotations.PlanResource) || @within(com.agpf.workhub.annotations.PlanResource)")
     public void validate(JoinPoint joinPoint) {
@@ -30,8 +25,8 @@ public class PlanResourceAspect {
         if (authentication == null)
             throw new BusinessException("Ocorreu um problema ao processar a solicitação!");
 
-        var user = userRepository.findByEmail(authentication.getName())
-                .orElseThrow(() -> new NotFoundException("Usuário não encontrado!"));
+        if (!(authentication.getPrincipal() instanceof User user))
+            throw new BusinessException("Ocorreu um problema ao processar a solicitação!");
 
         var allowed = user.getContractedResources().stream().anyMatch(r -> r.equals(planResource.verify()));
 

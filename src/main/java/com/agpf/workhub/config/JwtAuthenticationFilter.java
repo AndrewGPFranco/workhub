@@ -2,6 +2,7 @@ package com.agpf.workhub.config;
 
 import java.io.IOException;
 
+import com.agpf.workhub.services.auth.AuthenticatedUser;
 import com.agpf.workhub.services.auth.JwtService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -43,7 +44,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             var email = this.jwtService.extractSubject(token);
             var userDetails = this.userDetailsService.loadUserByUsername(email);
             if (this.jwtService.isValid(token, userDetails)) {
-                var authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+                var principal = userDetails instanceof AuthenticatedUser authenticatedUser ? authenticatedUser.user() : userDetails;
+                var authentication = new UsernamePasswordAuthenticationToken(principal, null, userDetails.getAuthorities());
                 authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             }

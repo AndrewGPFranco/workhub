@@ -5,6 +5,7 @@ import com.agpf.workhub.dtos.http.ResponseAPI;
 import com.agpf.workhub.dtos.user.daily.RegisterDailyDTO;
 import com.agpf.workhub.dtos.user.feedback.RegisterFeedbackDTO;
 import com.agpf.workhub.enums.plan.PlanResourceType;
+import com.agpf.workhub.models.user.User;
 import com.agpf.workhub.services.user.DailyService;
 import com.agpf.workhub.services.user.FeedbackService;
 import jakarta.validation.Valid;
@@ -23,35 +24,34 @@ public class UserController {
 
     private final DailyService dailyService;
     private final FeedbackService feedbackService;
-    private static final String USERNAME = "username";
 
     @PostMapping(value = "/daily/register")
     @PlanResource(verify = PlanResourceType.DAILY)
     public ResponseEntity<ResponseAPI> registerDaily(@Valid @RequestBody RegisterDailyDTO dto,
-                                                     @AuthenticationPrincipal(expression = USERNAME) String email) {
-        return ResponseEntity.ok().body(new ResponseAPI(HttpStatus.CREATED.value(), dailyService.registerDaily(dto, email)));
+                                                     @AuthenticationPrincipal User user) {
+        return ResponseEntity.ok().body(new ResponseAPI(HttpStatus.CREATED.value(), dailyService.registerDaily(dto, user)));
     }
 
     @GetMapping(value = "/daily/by-user")
     @PlanResource(verify = PlanResourceType.DAILY)
     ResponseEntity<ResponseAPI> getDailyByUser(@RequestParam("startDate") LocalDate startDate,
                                                @RequestParam("endDate") LocalDate endDate,
-                                               @AuthenticationPrincipal(expression = USERNAME) String email) {
-        var response = dailyService.getByUser(startDate, endDate, email);
+                                               @AuthenticationPrincipal User user) {
+        var response = dailyService.getByUser(startDate, endDate, user);
         return ResponseEntity.ok(new ResponseAPI(HttpStatus.OK.value(), response));
     }
 
     @PostMapping(value = "/feedback/register")
     @PlanResource(verify = PlanResourceType.FEEDBACK)
     public ResponseEntity<ResponseAPI> registerFeedback(@Valid @RequestBody RegisterFeedbackDTO dto,
-                                                        @AuthenticationPrincipal(expression = USERNAME) String email) {
-        return ResponseEntity.ok().body(new ResponseAPI(HttpStatus.CREATED.value(), feedbackService.registerFeedback(dto, email)));
+                                                        @AuthenticationPrincipal User user) {
+        return ResponseEntity.ok().body(new ResponseAPI(HttpStatus.CREATED.value(), feedbackService.registerFeedback(dto, user)));
     }
 
     @GetMapping(value = "/feedback/by-user")
     @PlanResource(verify = PlanResourceType.FEEDBACK)
-    ResponseEntity<ResponseAPI> getFeedbacksByUser(@AuthenticationPrincipal(expression = USERNAME) String email) {
-        var response = feedbackService.getByUser(email);
+    ResponseEntity<ResponseAPI> getFeedbacksByUser(@AuthenticationPrincipal User user) {
+        var response = feedbackService.getByUser(user);
         return ResponseEntity.ok(new ResponseAPI(HttpStatus.OK.value(), response));
     }
 
