@@ -4,7 +4,8 @@ public enum PlanResourceType {
 
     DAILY,
     DEMANDS,
-    FEEDBACK
+    FEEDBACK,
+    SUBDOMAINS
     ;
 
 }
