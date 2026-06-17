@@ -7,6 +7,7 @@ import com.agpf.workhub.enums.demands.PriorityDemandType;
 import com.agpf.workhub.enums.demands.StatusDemandType;
 import com.agpf.workhub.models.demands.Demand;
 import com.agpf.workhub.repositories.demands.DemandRepository;
+import com.agpf.workhub.services.subdomains.SubdomainAccessService;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
@@ -29,9 +30,12 @@ class DemandServiceTest extends BaseTest {
     @Mock
     private DemandRepository demandRepository;
 
+    @Mock
+    private SubdomainAccessService subdomainAccessService;
+
     private RegisterDemandDTO factoryDemandDTO() {
         return new RegisterDemandDTO("Demanda importante", "Programar utilizando TDD",
-                null, StatusDemandType.ONGOING, PriorityDemandType.URGENT, null);
+                null, StatusDemandType.ONGOING, PriorityDemandType.URGENT, null, null);
     }
 
     @Test
@@ -59,7 +63,7 @@ class DemandServiceTest extends BaseTest {
     void testEditDemand() {
         var demand = getDemand();
         var dto = new EditDemandDTO("Demanda atualizada", "Descrição atualizada", null,
-                StatusDemandType.DONE, "Entregue no prazo.", PriorityDemandType.HIGH, null);
+                StatusDemandType.DONE, "Entregue no prazo.", PriorityDemandType.HIGH, null, null);
 
         Mockito.when(demandRepository.findById(demand.getId())).thenReturn(Optional.of(demand));
 

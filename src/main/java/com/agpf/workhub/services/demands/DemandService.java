@@ -11,10 +11,9 @@ import com.agpf.workhub.exceptions.NotFoundException;
 import com.agpf.workhub.models.demands.Demand;
 import com.agpf.workhub.models.user.User;
 import com.agpf.workhub.repositories.demands.DemandRepository;
+import com.agpf.workhub.services.subdomains.SubdomainAccessService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,31 +25,30 @@ import java.util.UUID;
 public class DemandService {
 
     private final DemandRepository demandRepository;
+    private final SubdomainAccessService subdomainAccessService;
 
     @Transactional
     public String createDemand(RegisterDemandDTO dto, User user) {
-        var demand = dto.toEntity(user);
+        var subdomain = subdomainAccessService.resolve(user, dto.subdomainId());
+        var demand = dto.toEntity(user, subdomain);
 
         var saved = demandRepository.save(demand);
 
         return String.format("Demanda: '%s' foi registrada com sucesso!", saved.getTitle());
     }
 
-    public PageResponseDTO<OutputDemandDTO> getByUser(int page, User user, StatusDemandType status, PriorityDemandType priority) {
-        var demands = getDemandsFilter(user.getId(), status, PageRequest.of(page, 5), priority);
+    public PageResponseDTO<OutputDemandDTO> getByUser(int page, User user, StatusDemandType status,
+                                                      PriorityDemandType priority, UUID subdomainId) {
+        var subdomain = subdomainAccessService.resolve(user, subdomainId);
+        var demands = demandRepository.findByUserAndSubdomainAndFilters(
+                user.getId(),
+                subdomain == null ? null : subdomain.getId(),
+                status,
+                priority,
+                PageRequest.of(page, 5)
+        );
 
         return PageResponseDTO.fromPage(demands.map(OutputDemandDTO::fromEntity));
-    }
-
-    private Page<Demand> getDemandsFilter(Long userId, StatusDemandType status, Pageable pageable, PriorityDemandType priority) {
-        if (status == null && priority == null)
-            return demandRepository.findByUserIdOrderByCreatedAtDesc(userId, pageable);
-        else if (status != null && priority == null)
-            return demandRepository.findByUserIdAndStatusOrderByCreatedAtDesc(userId, status, pageable);
-        else if (status == null)
-            return demandRepository.findByUserIdAndPriorityOrderByCreatedAtDesc(userId, priority, pageable);
-
-        return demandRepository.findByUserIdAndPriorityAndStatusOrderByCreatedAtDesc(userId, priority, status, pageable);
     }
 
     @Transactional
@@ -70,6 +68,7 @@ public class DemandService {
         demand.setStatus(dto.status());
         demand.setObservationsToReview(dto.observationsToReview());
         demand.setPriority(dto.priority());
+        demand.setSubdomain(subdomainAccessService.resolve(user, dto.subdomainId()));
 
         if (dto.finalizedAt() != null) {
             demand.setStatus(StatusDemandType.DONE);
@@ -89,8 +88,9 @@ public class DemandService {
         demandRepository.deleteById(idDemand);
     }
 
-    public List<OutputDemandDTO> searchByDemand(String title, User user) {
-        var demands = demandRepository.searchByDemand(title, user.getId());
+    public List<OutputDemandDTO> searchByDemand(String title, User user, UUID subdomainId) {
+        var subdomain = subdomainAccessService.resolve(user, subdomainId);
+        var demands = demandRepository.searchByDemand(title, user.getId(), subdomain == null ? null : subdomain.getId());
 
         return demands.stream().map(OutputDemandDTO::fromEntity).toList();
     }

@@ -14,11 +14,20 @@ import java.util.UUID;
 public interface DailyRepository extends JpaRepository<Daily, UUID> {
 
     @Query(
-            value = "select * from daily where user_id = :idUser and date_summary between :startDate and :endDate",
+            value = """
+                    SELECT *
+                    FROM daily
+                    WHERE user_id = :idUser
+                      AND ((:subdomainId IS NULL AND subdomain_id IS NULL) OR subdomain_id = :subdomainId)
+                      AND date_summary BETWEEN :startDate AND :endDate
+                    """,
             nativeQuery = true
     )
     List<Daily> findByUserBetweenDates(
-            @Param("startDate") LocalDate startDate, @Param("endDate") LocalDate endDate, @Param("idUser") Long idUser
+            @Param("startDate") LocalDate startDate,
+            @Param("endDate") LocalDate endDate,
+            @Param("idUser") Long idUser,
+            @Param("subdomainId") UUID subdomainId
     );
 
 }

@@ -16,6 +16,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
@@ -36,8 +37,9 @@ public class UserController {
     @PlanResource(verify = PlanResourceType.DAILY)
     ResponseEntity<ResponseAPI> getDailyByUser(@RequestParam("startDate") LocalDate startDate,
                                                @RequestParam("endDate") LocalDate endDate,
+                                               @RequestParam(required = false) UUID subdomainId,
                                                @AuthenticationPrincipal User user) {
-        var response = dailyService.getByUser(startDate, endDate, user);
+        var response = dailyService.getByUser(startDate, endDate, user, subdomainId);
         return ResponseEntity.ok(new ResponseAPI(HttpStatus.OK.value(), response));
     }
 
@@ -50,8 +52,9 @@ public class UserController {
 
     @GetMapping(value = "/feedback/by-user")
     @PlanResource(verify = PlanResourceType.FEEDBACK)
-    ResponseEntity<ResponseAPI> getFeedbacksByUser(@AuthenticationPrincipal User user) {
-        var response = feedbackService.getByUser(user);
+    ResponseEntity<ResponseAPI> getFeedbacksByUser(@RequestParam(required = false) UUID subdomainId,
+                                                   @AuthenticationPrincipal User user) {
+        var response = feedbackService.getByUser(user, subdomainId);
         return ResponseEntity.ok(new ResponseAPI(HttpStatus.OK.value(), response));
     }
 

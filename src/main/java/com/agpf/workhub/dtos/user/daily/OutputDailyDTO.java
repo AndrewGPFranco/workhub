@@ -11,9 +11,17 @@ public record OutputDailyDTO(
         LocalDate date,
         String summary,
         LocalDateTime createdAt,
-        LocalDateTime updatedAt
+        LocalDateTime updatedAt,
+        UUID subdomainId
 ) {
     public static OutputDailyDTO fromEntity(Daily daily) {
-        return new OutputDailyDTO(daily.getId(), daily.getDate(), daily.getSummary(), daily.getCreatedAt(), daily.getUpdatedAt());
+        return new OutputDailyDTO(
+                daily.getId(),
+                daily.getDate(),
+                daily.getSummary(),
+                daily.getCreatedAt(),
+                daily.getUpdatedAt(),
+                daily.getSubdomain() == null ? null : daily.getSubdomain().getId()
+        );
     }
 }

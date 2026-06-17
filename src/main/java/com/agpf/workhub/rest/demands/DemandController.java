@@ -27,18 +27,18 @@ public class DemandController {
     private final DemandService demandService;
 
     @PostMapping(value = "/register")
-    ResponseEntity<ResponseAPI> register(@Valid @RequestBody RegisterDemandDTO dto,
-                                         @AuthenticationPrincipal User user) {
+    ResponseEntity<ResponseAPI> register(@Valid @RequestBody RegisterDemandDTO dto, @AuthenticationPrincipal User user) {
         var response = demandService.createDemand(dto, user);
         return ResponseEntity.status(HttpStatus.CREATED.value()).body(new ResponseAPI(HttpStatus.CREATED.value(), response));
     }
 
     @GetMapping(value = "/by-user")
     ResponseEntity<ResponseAPI> getByUser(@RequestParam int page,
+                                          @RequestParam(required = false) UUID subdomainId,
                                           @RequestParam(required = false) StatusDemandType status,
                                           @RequestParam(required = false) PriorityDemandType priority,
                                           @AuthenticationPrincipal User user) {
-        var response = demandService.getByUser(page, user, status, priority);
+        var response = demandService.getByUser(page, user, status, priority, subdomainId);
         return ResponseEntity.ok(new ResponseAPI(HttpStatus.OK.value(), response));
     }
 
@@ -58,8 +58,9 @@ public class DemandController {
 
     @GetMapping(value = "/search")
     ResponseEntity<ResponseAPI> searchDemand(@RequestParam String title,
+                                             @RequestParam(required = false) UUID subdomainId,
                                              @AuthenticationPrincipal User user) {
-        var response = demandService.searchByDemand(title, user);
+        var response = demandService.searchByDemand(title, user, subdomainId);
         return ResponseEntity.ok(new ResponseAPI(HttpStatus.OK.value(), response));
     }
 

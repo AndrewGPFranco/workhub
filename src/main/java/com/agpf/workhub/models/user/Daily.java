@@ -1,5 +1,6 @@
 package com.agpf.workhub.models.user;
 
+import com.agpf.workhub.models.subdomains.Subdomain;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
@@ -40,5 +41,9 @@ public class Daily {
 
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "subdomain_id")
+    private Subdomain subdomain;
 
 }

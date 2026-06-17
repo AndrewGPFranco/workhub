@@ -2,6 +2,7 @@ package com.agpf.workhub.models.demands;
 
 import com.agpf.workhub.enums.demands.PriorityDemandType;
 import com.agpf.workhub.enums.demands.StatusDemandType;
+import com.agpf.workhub.models.subdomains.Subdomain;
 import com.agpf.workhub.models.user.User;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
@@ -67,5 +68,9 @@ public class Demand {
 
     @Column(name = "observations_to_review", nullable = true, length = 2500, columnDefinition = "TEXT")
     private String observationsToReview;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "subdomain_id")
+    private Subdomain subdomain;
 
 }

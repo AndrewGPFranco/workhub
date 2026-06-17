@@ -14,12 +14,14 @@ public record OutputFeedbackDTO(
         String peopleFeedback,
         String summary,
         LocalDateTime createdAt,
-        LocalDateTime updatedAt
+        LocalDateTime updatedAt,
+        UUID subdomainId
 ) {
     public static OutputFeedbackDTO fromEntity(Feedback feedback) {
         return new OutputFeedbackDTO(
-                feedback.getId(), feedback.getDate(), feedback.getMonth(), feedback.getSummary(),
-                feedback.getPeopleFeedback(), feedback.getCreatedAt(), feedback.getUpdatedAt()
+                feedback.getId(), feedback.getDate(), feedback.getMonth(), feedback.getPeopleFeedback(),
+                feedback.getSummary(), feedback.getCreatedAt(), feedback.getUpdatedAt(),
+                feedback.getSubdomain() == null ? null : feedback.getSubdomain().getId()
         );
     }
 }

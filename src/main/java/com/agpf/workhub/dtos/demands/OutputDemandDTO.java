@@ -22,14 +22,16 @@ public record OutputDemandDTO(
         @NotNull LocalDateTime createdAt,
         LocalDateTime updatedAt,
         String observationsToReview,
-        LocalDate finalizedAt
+        LocalDate finalizedAt,
+        UUID subdomainId
 ) {
 
     public static OutputDemandDTO fromEntity(Demand demand) {
         return OutputDemandDTO.builder().id(demand.getId()).title(demand.getTitle())
                 .description(demand.getDescription()).deadline(demand.getDeadline()).finalizedAt(demand.getFinalizedAt())
                 .status(demand.getStatus()).priority(demand.getPriority()).createdAt(demand.getCreatedAt())
-                .updatedAt(demand.getUpdatedAt()).observationsToReview(demand.getObservationsToReview()).build();
+                .updatedAt(demand.getUpdatedAt()).observationsToReview(demand.getObservationsToReview())
+                .subdomainId(demand.getSubdomain() == null ? null : demand.getSubdomain().getId()).build();
     }
 
 }

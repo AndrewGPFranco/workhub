@@ -17,6 +17,8 @@ public interface SubdomainRepository extends JpaRepository<Subdomain, UUID> {
 
     Optional<Subdomain> findByNameAndUser(String name, User user);
 
+    Optional<Subdomain> findByIdAndUser(UUID id, User user);
+
     @Query("""
             select new com.agpf.workhub.dtos.subdomains.OutputSubdomain(
                 s.urlPhoto, s.id, s.name
