@@ -1,7 +1,9 @@
 package com.agpf.workhub.services.auth;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
+import com.agpf.workhub.enums.plan.PlanResourceType;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -50,7 +52,7 @@ public class AuthService {
         var savedUser = this.userRepository.save(User.builder()
                 .email(request.email()).username(request.username()).firstName(request.firstName())
                 .lastName(request.lastName()).passwordHash(this.passwordEncoder.encode(request.password()))
-                .role(DEFAULT_ROLE).createdAt(now).updatedAt(now)
+                .role(DEFAULT_ROLE).createdAt(now).updatedAt(now).contractedResources(List.of(PlanResourceType.DEMANDS))
                 .build());
 
         return responseFor(savedUser);

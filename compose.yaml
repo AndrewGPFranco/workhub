@@ -8,3 +8,10 @@ services:
       - 'POSTGRES_USER=${USER_DB:-workhub}'
     ports:
       - '5432:5432'
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+
+volumes:
+  postgres-data:
+    external: true
+    name: 8c443a20dc7e93276e285f00f92fdc797d6e166f1741a95c4ef1d6888f457f93
