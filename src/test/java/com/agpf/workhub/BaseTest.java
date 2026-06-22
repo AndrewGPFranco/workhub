@@ -29,7 +29,7 @@ public abstract class BaseTest {
 
     public Demand getDemand() {
         return new Demand(UUID.randomUUID(), getUser(), "Demanda importante", "Programar utilizando TDD", null,
-                StatusDemandType.ONGOING, LocalDateTime.now(), null, null, PriorityDemandType.LOW, null, null);
+                StatusDemandType.ONGOING, LocalDateTime.now(), null, null, PriorityDemandType.LOW, null, null, null);
     }
 
 }

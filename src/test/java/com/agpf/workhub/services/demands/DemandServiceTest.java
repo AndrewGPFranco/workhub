@@ -35,7 +35,7 @@ class DemandServiceTest extends BaseTest {
 
     private RegisterDemandDTO factoryDemandDTO() {
         return new RegisterDemandDTO("Demanda importante", "Programar utilizando TDD",
-                null, StatusDemandType.ONGOING, PriorityDemandType.URGENT, null, null);
+                null, StatusDemandType.ONGOING, PriorityDemandType.URGENT, null, null, null);
     }
 
     @Test

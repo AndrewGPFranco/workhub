@@ -1,6 +1,7 @@
 package com.agpf.workhub.services.demands;
 
 import com.agpf.workhub.dtos.demands.EditDemandDTO;
+import com.agpf.workhub.dtos.demands.InputObservationDTO;
 import com.agpf.workhub.dtos.demands.OutputDemandDTO;
 import com.agpf.workhub.dtos.demands.RegisterDemandDTO;
 import com.agpf.workhub.dtos.http.PageResponseDTO;
@@ -8,15 +9,17 @@ import com.agpf.workhub.enums.demands.PriorityDemandType;
 import com.agpf.workhub.enums.demands.StatusDemandType;
 import com.agpf.workhub.exceptions.BusinessException;
 import com.agpf.workhub.exceptions.NotFoundException;
-import com.agpf.workhub.models.demands.Demand;
+import com.agpf.workhub.models.demands.Observation;
 import com.agpf.workhub.models.user.User;
 import com.agpf.workhub.repositories.demands.DemandRepository;
+import com.agpf.workhub.repositories.demands.ObservationRepository;
 import com.agpf.workhub.services.subdomains.SubdomainAccessService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -25,11 +28,13 @@ import java.util.UUID;
 public class DemandService {
 
     private final DemandRepository demandRepository;
+    private final ObservationRepository observationRepository;
     private final SubdomainAccessService subdomainAccessService;
 
     @Transactional
     public String createDemand(RegisterDemandDTO dto, User user) {
         var subdomain = subdomainAccessService.resolve(user, dto.subdomainId());
+
         var demand = dto.toEntity(user, subdomain);
 
         var saved = demandRepository.save(demand);
@@ -80,7 +85,7 @@ public class DemandService {
 
     @Transactional
     public void deleteDemand(UUID idDemand, User user) {
-        Demand demand = demandRepository.findById(idDemand).orElseThrow(() -> new NotFoundException("Demanda não encontrada!"));
+        var demand = demandRepository.findById(idDemand).orElseThrow(() -> new NotFoundException("Demanda não encontrada!"));
 
         if (!demand.getUser().getId().equals(user.getId()))
             throw new BusinessException(String.format("A demanda com título: %s informada não pertence ao usuário: %s", demand.getTitle(), user.getUsername()));
@@ -93,5 +98,23 @@ public class DemandService {
         var demands = demandRepository.searchByDemand(title, user.getId(), subdomain == null ? null : subdomain.getId());
 
         return demands.stream().map(OutputDemandDTO::fromEntity).toList();
+    }
+
+    @Transactional
+    public void addObservationsToDemand(InputObservationDTO dto) {
+        var demand = demandRepository.findById(dto.demandId()).orElseThrow(
+                () -> new NotFoundException("Demanda não encontrada!")
+        );
+
+        if (demand.getObservations() == null)
+            demand.setObservations(new ArrayList<>());
+
+        var observations = dto.textObservations().stream().map(t -> InputObservationDTO.toEntity(t, demand)).toList();
+
+        var observationsPersisted = observationRepository.saveAll(observations);
+
+        demand.getObservations().addAll(observationsPersisted);
+
+        demandRepository.save(demand);
     }
 }

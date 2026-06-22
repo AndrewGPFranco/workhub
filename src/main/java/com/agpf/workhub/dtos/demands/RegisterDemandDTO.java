@@ -19,13 +19,20 @@ public record RegisterDemandDTO(
         @NotNull StatusDemandType status,
         @NotNull PriorityDemandType priority,
         String observationToReview,
-        UUID subdomainId
+        UUID subdomainId,
+        InputObservationDTO observations
 ) {
 
     public Demand toEntity(User user, Subdomain subdomain) {
-        return Demand.builder().user(user).title(title).createdAt(LocalDateTime.now()).updatedAt(null)
+        var demand = Demand.builder().user(user).title(title).createdAt(LocalDateTime.now()).updatedAt(null)
                 .observationsToReview(observationToReview).description(description).deadline(deadline)
-                .status(status).priority(priority).subdomain(subdomain).build();
+                .observations(null).status(status).priority(priority).subdomain(subdomain).build();
+
+        var observations = observations().textObservations().stream().map(o -> InputObservationDTO.toEntity(o, demand)).toList();
+
+        demand.setObservations(observations);
+
+        return demand;
     }
 
 }

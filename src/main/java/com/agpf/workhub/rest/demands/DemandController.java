@@ -2,6 +2,7 @@ package com.agpf.workhub.rest.demands;
 
 import com.agpf.workhub.annotations.PlanResource;
 import com.agpf.workhub.dtos.demands.EditDemandDTO;
+import com.agpf.workhub.dtos.demands.InputObservationDTO;
 import com.agpf.workhub.dtos.demands.RegisterDemandDTO;
 import com.agpf.workhub.dtos.http.ResponseAPI;
 import com.agpf.workhub.enums.demands.PriorityDemandType;
@@ -30,6 +31,14 @@ public class DemandController {
     ResponseEntity<ResponseAPI> register(@Valid @RequestBody RegisterDemandDTO dto, @AuthenticationPrincipal User user) {
         var response = demandService.createDemand(dto, user);
         return ResponseEntity.status(HttpStatus.CREATED.value()).body(new ResponseAPI(HttpStatus.CREATED.value(), response));
+    }
+
+    @PatchMapping(value = "/add-observations")
+    ResponseEntity<ResponseAPI> addObservationsToDemand(@Valid @RequestBody InputObservationDTO dto) {
+        demandService.addObservationsToDemand(dto);
+        return ResponseEntity.status(HttpStatus.CREATED.value()).body(
+                new ResponseAPI(HttpStatus.CREATED.value(), "Observações adicionadas!")
+        );
     }
 
     @GetMapping(value = "/by-user")
