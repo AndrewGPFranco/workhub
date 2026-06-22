@@ -12,6 +12,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 @Setter
@@ -72,5 +73,8 @@ public class Demand {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "subdomain_id")
     private Subdomain subdomain;
+
+    @OneToMany(mappedBy = "demand", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    List<Observation> observations;
 
 }
