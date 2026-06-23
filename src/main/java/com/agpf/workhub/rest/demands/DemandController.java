@@ -52,7 +52,8 @@ public class DemandController {
     }
 
     @PatchMapping(value = "/edit/{id}")
-    ResponseEntity<ResponseAPI> editDemand(@PathVariable(name = "id") UUID idDemand, @RequestBody EditDemandDTO dto,
+    ResponseEntity<ResponseAPI> editDemand(@PathVariable(name = "id") UUID idDemand,
+                                           @RequestBody EditDemandDTO dto,
                                            @AuthenticationPrincipal User user) {
         demandService.editDemand(idDemand, dto, user);
         return ResponseEntity.ok(new ResponseAPI(HttpStatus.OK.value(), "Demanda editada com sucesso!"));

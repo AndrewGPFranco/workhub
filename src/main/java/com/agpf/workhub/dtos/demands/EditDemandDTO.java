@@ -14,6 +14,7 @@ public record EditDemandDTO(
         String observationsToReview,
         PriorityDemandType priority,
         LocalDate finalizedAt,
-        UUID subdomainId
+        UUID subdomainId,
+        InputObservationDTO observations
 ) {
 }
