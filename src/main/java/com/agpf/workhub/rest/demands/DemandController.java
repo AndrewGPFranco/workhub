@@ -74,4 +74,12 @@ public class DemandController {
         return ResponseEntity.ok(new ResponseAPI(HttpStatus.OK.value(), response));
     }
 
+    @PutMapping(value = "/alter-subdomain/{idDemand}")
+    ResponseEntity<ResponseAPI> changeDemandSubdomain(@PathVariable UUID idDemand,
+                                                      @RequestParam UUID idSubdomain,
+                                                      @AuthenticationPrincipal User user) {
+        var response = demandService.changeDemandSubdomain(idDemand, idSubdomain, user);
+        return ResponseEntity.ok(new ResponseAPI(HttpStatus.OK.value(), response));
+    }
+
 }

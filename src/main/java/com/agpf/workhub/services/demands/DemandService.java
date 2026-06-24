@@ -9,9 +9,12 @@ import com.agpf.workhub.enums.demands.PriorityDemandType;
 import com.agpf.workhub.enums.demands.StatusDemandType;
 import com.agpf.workhub.exceptions.BusinessException;
 import com.agpf.workhub.exceptions.NotFoundException;
+import com.agpf.workhub.models.demands.Demand;
+import com.agpf.workhub.models.subdomains.Subdomain;
 import com.agpf.workhub.models.user.User;
 import com.agpf.workhub.repositories.demands.DemandRepository;
 import com.agpf.workhub.repositories.demands.ObservationRepository;
+import com.agpf.workhub.repositories.subdomains.SubdomainRepository;
 import com.agpf.workhub.services.subdomains.SubdomainAccessService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
@@ -21,6 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -28,6 +32,7 @@ import java.util.UUID;
 public class DemandService {
 
     private final DemandRepository demandRepository;
+    private final SubdomainRepository subdomainRepository;
     private final ObservationRepository observationRepository;
     private final SubdomainAccessService subdomainAccessService;
 
@@ -116,5 +121,22 @@ public class DemandService {
         demand.getObservations().addAll(observationsPersisted);
 
         demandRepository.save(demand);
+    }
+
+    @Transactional
+    public String changeDemandSubdomain(UUID idDemand, UUID idSubdomain, User user) {
+        var demand = demandRepository.findById(idDemand).orElseThrow(() -> new NotFoundException(DEMAND_NOT_FOUND));
+
+        var subdomain = subdomainRepository.findByIdAndUser(idSubdomain, user)
+                .orElseThrow(() -> new NotFoundException("Subdomínio não encontrado!"));
+
+        if (demand.getSubdomain() == subdomain)
+            throw new BusinessException("A demanda já pertence ao subdomínio mencionado!");
+
+        demand.setSubdomain(subdomain);
+
+        demandRepository.save(demand);
+
+        return String.format("A demanda foi passado ao subdomínio alvo: %s", subdomain.getName());
     }
 }
