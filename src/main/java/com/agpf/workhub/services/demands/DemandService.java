@@ -47,13 +47,8 @@ public class DemandService {
     public PageResponseDTO<OutputDemandDTO> getByUser(int page, User user, StatusDemandType status,
                                                       PriorityDemandType priority, UUID subdomainId) {
         var subdomain = subdomainAccessService.resolve(user, subdomainId);
-        var demands = demandRepository.findByUserAndSubdomainAndFilters(
-                user.getId(),
-                subdomain == null ? null : subdomain.getId(),
-                status,
-                priority,
-                PageRequest.of(page, 5)
-        );
+        var demands = demandRepository.findByUserAndSubdomainAndFilters(user.getId(),
+                subdomain == null ? null : subdomain.getId(), status, priority, PageRequest.of(page, 5));
 
         return PageResponseDTO.fromPage(demands.map(OutputDemandDTO::fromEntity));
     }

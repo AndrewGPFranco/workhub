@@ -26,12 +26,8 @@ public interface DemandRepository extends JpaRepository<Demand, UUID> {
             ORDER BY d.createdAt DESC
             """)
     Page<Demand> findByUserAndSubdomainAndFilters(
-            @Param("userId") Long userId,
-            @Param("subdomainId") UUID subdomainId,
-            @Param("status") StatusDemandType status,
-            @Param("priority") PriorityDemandType priority,
-            Pageable pageable
-    );
+            @Param("userId") Long userId, @Param("subdomainId") UUID subdomainId,
+            @Param("status") StatusDemandType status, @Param("priority") PriorityDemandType priority, Pageable pageable);
 
     @Query(
             value = """
@@ -43,8 +39,5 @@ public interface DemandRepository extends JpaRepository<Demand, UUID> {
                     """,
             nativeQuery = true
     )
-    List<Demand> searchByDemand(@Param("title") String title,
-                                @Param("idUser") Long idUser,
-                                @Param("subdomainId") UUID subdomainId
-    );
+    List<Demand> searchByDemand(@Param("title") String title, @Param("idUser") Long idUser, @Param("subdomainId") UUID subdomainId);
 }
