@@ -9,8 +9,6 @@ import com.agpf.workhub.enums.demands.PriorityDemandType;
 import com.agpf.workhub.enums.demands.StatusDemandType;
 import com.agpf.workhub.exceptions.BusinessException;
 import com.agpf.workhub.exceptions.NotFoundException;
-import com.agpf.workhub.models.demands.Demand;
-import com.agpf.workhub.models.subdomains.Subdomain;
 import com.agpf.workhub.models.user.User;
 import com.agpf.workhub.repositories.demands.DemandRepository;
 import com.agpf.workhub.repositories.demands.ObservationRepository;
@@ -24,8 +22,9 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
+
+import static com.agpf.workhub.utils.DateUtils.getLocalDateAmericaSP;
 
 @Service
 @RequiredArgsConstructor
@@ -49,13 +48,27 @@ public class DemandService {
         return String.format("Demanda: '%s' foi registrada com sucesso!", saved.getTitle());
     }
 
-    public PageResponseDTO<OutputDemandDTO> getByUser(int page, User user, StatusDemandType status,
+    public List<PageResponseDTO<OutputDemandDTO>> getByUser(int page, User user, StatusDemandType status,
                                                       PriorityDemandType priority, UUID subdomainId) {
         var subdomain = subdomainAccessService.resolve(user, subdomainId);
-        var demands = demandRepository.findByUserAndSubdomainAndFilters(user.getId(),
-                subdomain == null ? null : subdomain.getId(), status, priority, PageRequest.of(page, 5));
 
-        return PageResponseDTO.fromPage(demands.map(OutputDemandDTO::fromEntity));
+        var demandList = new ArrayList<PageResponseDTO<OutputDemandDTO>>();
+
+        if (status != null) {
+            var demands = demandRepository.findByUserAndSubdomainAndFilters(user.getId(),
+                    subdomain == null ? null : subdomain.getId(), status, priority, PageRequest.of(page, 5));
+
+            return List.of(PageResponseDTO.fromPage(demands.map(OutputDemandDTO::fromEntity)));
+        }
+
+        for (var currentStatus : StatusDemandType.values()) {
+            var demands = demandRepository.findByUserAndSubdomainAndFilters(user.getId(),
+                    subdomain == null ? null : subdomain.getId(), currentStatus, priority, PageRequest.of(page, 5));
+
+            demandList.add(PageResponseDTO.fromPage(demands.map(OutputDemandDTO::fromEntity)));
+        }
+
+        return demandList;
     }
 
     @Transactional
@@ -83,7 +96,7 @@ public class DemandService {
         }
 
         if (StatusDemandType.DONE.equals(dto.status()) && dto.finalizedAt() == null)
-            demand.setFinalizedAt(LocalDate.now());
+            demand.setFinalizedAt(getLocalDateAmericaSP());
 
         demandRepository.save(demand);
     }
