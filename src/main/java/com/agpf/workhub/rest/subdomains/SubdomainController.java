@@ -2,6 +2,7 @@ package com.agpf.workhub.rest.subdomains;
 
 import com.agpf.workhub.annotations.PlanResource;
 import com.agpf.workhub.dtos.http.ResponseAPI;
+import com.agpf.workhub.dtos.subdomains.EditSubdomainDTO;
 import com.agpf.workhub.dtos.subdomains.RegisterSubdomainDTO;
 import com.agpf.workhub.models.user.User;
 import com.agpf.workhub.services.subdomains.SubdomainService;
@@ -11,6 +12,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.UUID;
 
 import static com.agpf.workhub.enums.plan.PlanResourceType.SUBDOMAINS;
 
@@ -23,7 +26,7 @@ public class SubdomainController {
     private final SubdomainService subdomainService;
 
     @PostMapping(value = "/register")
-    public ResponseEntity<ResponseAPI> register(@RequestBody @Valid RegisterSubdomainDTO dto,
+    ResponseEntity<ResponseAPI> register(@RequestBody @Valid RegisterSubdomainDTO dto,
                                                 @AuthenticationPrincipal User user) {
         subdomainService.register(dto, user);
         return ResponseEntity.status(HttpStatus.CREATED).body(
@@ -32,10 +35,18 @@ public class SubdomainController {
     }
 
     @GetMapping(value = "/by-user")
-    public ResponseEntity<ResponseAPI> subdomainsByUser(@AuthenticationPrincipal User user) {
+    ResponseEntity<ResponseAPI> subdomainsByUser(@AuthenticationPrincipal User user) {
         var subdomains = subdomainService.subdomainsByUser(user);
 
         return ResponseEntity.status(HttpStatus.OK).body(new ResponseAPI(HttpStatus.OK.value(), subdomains));
+    }
+
+    @PutMapping(value = "/edit/{idSubdomain}")
+    ResponseEntity<ResponseAPI> subdomainsByUser(@RequestBody EditSubdomainDTO dto,
+                                                 @PathVariable UUID idSubdomain, @AuthenticationPrincipal User user) {
+        subdomainService.edit(dto, idSubdomain, user);
+
+        return ResponseEntity.status(HttpStatus.OK).body(new ResponseAPI(HttpStatus.OK.value(), "Subdomínio editado com sucesso!"));
     }
 
 }
