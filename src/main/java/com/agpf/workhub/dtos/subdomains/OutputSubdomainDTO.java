@@ -6,14 +6,14 @@ import jakarta.validation.constraints.NotNull;
 
 import java.util.UUID;
 
-public record OutputSubdomain(
+public record OutputSubdomainDTO(
         String urlPhoto,
         @NotNull UUID id,
         @NotBlank String name
 ) {
 
-    public static OutputSubdomain fromEntity(Subdomain subdomain) {
-        return new OutputSubdomain(subdomain.getUrlPhoto(), subdomain.getId(), subdomain.getName());
+    public static OutputSubdomainDTO fromEntity(Subdomain subdomain) {
+        return new OutputSubdomainDTO(subdomain.getUrlPhoto(), subdomain.getId(), subdomain.getName());
     }
 
 }

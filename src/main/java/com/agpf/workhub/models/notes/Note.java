@@ -1,4 +1,4 @@
-package com.agpf.workhub.models.annotations;
+package com.agpf.workhub.models.notes;
 
 import com.agpf.workhub.models.subdomains.Subdomain;
 import com.agpf.workhub.models.user.User;

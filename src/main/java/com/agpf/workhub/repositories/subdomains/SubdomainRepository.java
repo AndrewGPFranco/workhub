@@ -1,6 +1,6 @@
 package com.agpf.workhub.repositories.subdomains;
 
-import com.agpf.workhub.dtos.subdomains.OutputSubdomain;
+import com.agpf.workhub.dtos.subdomains.OutputSubdomainDTO;
 import com.agpf.workhub.models.subdomains.Subdomain;
 import com.agpf.workhub.models.user.User;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -20,9 +20,9 @@ public interface SubdomainRepository extends JpaRepository<Subdomain, UUID> {
     Optional<Subdomain> findByIdAndUser(UUID id, User user);
 
     @Query("""
-            select new com.agpf.workhub.dtos.subdomains.OutputSubdomain(
+            select new com.agpf.workhub.dtos.subdomains.OutputSubdomainDTO(
                 s.urlPhoto, s.id, s.name
             ) from Subdomain s where s.user.id = :idUser
             """)
-    List<OutputSubdomain> subdomainsByUser(@Param("idUser") Long idUser);
+    List<OutputSubdomainDTO> subdomainsByUser(@Param("idUser") Long idUser);
 }

@@ -20,12 +20,12 @@ public interface FeedbackRepository extends JpaRepository<Feedback, UUID> {
             SELECT f
             FROM Feedback f
             WHERE f.user = :user
-              AND ((:subdomainId IS NULL AND f.subdomain IS NULL) OR f.subdomain.id = :subdomainId)
+              AND ((:idSubdomain IS NULL AND f.subdomain IS NULL) OR f.subdomain.id = :idSubdomain)
             ORDER BY f.date DESC
             """)
     Page<Feedback> findByUserAndSubdomain(
             @Param("user") User user,
-            @Param("subdomainId") UUID subdomainId,
+            @Param("idSubdomain") UUID idSubdomain,
             Pageable pageable
     );
 

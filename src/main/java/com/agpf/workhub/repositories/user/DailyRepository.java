@@ -18,7 +18,7 @@ public interface DailyRepository extends JpaRepository<Daily, UUID> {
                     SELECT *
                     FROM daily
                     WHERE user_id = :idUser
-                      AND ((:subdomainId IS NULL AND subdomain_id IS NULL) OR subdomain_id = :subdomainId)
+                      AND ((:idSubdomain IS NULL AND subdomain_id IS NULL) OR subdomain_id = :idSubdomain)
                       AND date_summary BETWEEN :startDate AND :endDate
                     """,
             nativeQuery = true
@@ -27,7 +27,7 @@ public interface DailyRepository extends JpaRepository<Daily, UUID> {
             @Param("startDate") LocalDate startDate,
             @Param("endDate") LocalDate endDate,
             @Param("idUser") Long idUser,
-            @Param("subdomainId") UUID subdomainId
+            @Param("idSubdomain") UUID idSubdomain
     );
 
 }

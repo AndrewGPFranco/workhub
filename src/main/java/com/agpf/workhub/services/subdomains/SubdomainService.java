@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.agpf.workhub.dtos.subdomains.EditSubdomainDTO;
-import com.agpf.workhub.dtos.subdomains.OutputSubdomain;
+import com.agpf.workhub.dtos.subdomains.OutputSubdomainDTO;
 import com.agpf.workhub.dtos.subdomains.RegisterSubdomainDTO;
 import com.agpf.workhub.exceptions.BusinessException;
 import com.agpf.workhub.models.user.User;
@@ -35,7 +35,7 @@ public class SubdomainService {
         subdomainRepository.save(entity);
     }
 
-    public List<OutputSubdomain> subdomainsByUser(User user) {
+    public List<OutputSubdomainDTO> subdomainsByUser(User user) {
         return subdomainRepository.subdomainsByUser(user.getId());
     }
 

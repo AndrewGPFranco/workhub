@@ -20,13 +20,13 @@ public interface DemandRepository extends JpaRepository<Demand, UUID> {
             SELECT d
             FROM Demand d
             WHERE d.user.id = :userId
-              AND ((:subdomainId IS NULL AND d.subdomain IS NULL) OR d.subdomain.id = :subdomainId)
+              AND ((:idSubdomain IS NULL AND d.subdomain IS NULL) OR d.subdomain.id = :idSubdomain)
               AND (:status IS NULL OR d.status = :status)
               AND (:priority IS NULL OR d.priority = :priority)
             ORDER BY d.createdAt DESC
             """)
     Page<Demand> findByUserAndSubdomainAndFilters(
-            @Param("userId") Long userId, @Param("subdomainId") UUID subdomainId,
+            @Param("userId") Long userId, @Param("idSubdomain") UUID idSubdomain,
             @Param("status") StatusDemandType status, @Param("priority") PriorityDemandType priority, Pageable pageable);
 
     @Query(
@@ -34,10 +34,10 @@ public interface DemandRepository extends JpaRepository<Demand, UUID> {
                     SELECT *
                     FROM demands
                     WHERE user_id = :idUser
-                      AND ((:subdomainId IS NULL AND subdomain_id IS NULL) OR subdomain_id = :subdomainId)
+                      AND ((:idSubdomain IS NULL AND subdomain_id IS NULL) OR subdomain_id = :idSubdomain)
                       AND UPPER(title) LIKE CONCAT('%', UPPER(:title), '%')
                     """,
             nativeQuery = true
     )
-    List<Demand> searchByDemand(@Param("title") String title, @Param("idUser") Long idUser, @Param("subdomainId") UUID subdomainId);
+    List<Demand> searchByDemand(@Param("title") String title, @Param("idUser") Long idUser, @Param("idSubdomain") UUID idSubdomain);
 }
