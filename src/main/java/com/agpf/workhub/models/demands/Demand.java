@@ -39,7 +39,7 @@ public class Demand {
     private String title;
 
     @NotNull(message = "A descrição é obrigatória.")
-    @Column(name = "description", length = 500, nullable = false)
+    @Column(name = "description", length = 1000, nullable = false)
     private String description;
 
     @Column(name = "deadline")

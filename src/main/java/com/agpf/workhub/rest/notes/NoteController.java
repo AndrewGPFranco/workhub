@@ -4,6 +4,7 @@ import com.agpf.workhub.annotations.PlanResource;
 import com.agpf.workhub.dtos.http.ResponseAPI;
 import com.agpf.workhub.dtos.notes.RegisterNoteDTO;
 import com.agpf.workhub.enums.plan.PlanResourceType;
+import com.agpf.workhub.models.notes.Note;
 import com.agpf.workhub.models.user.User;
 import com.agpf.workhub.services.notes.NoteService;
 import jakarta.validation.Valid;
@@ -29,10 +30,17 @@ public class NoteController {
         return ResponseEntity.ok().body(new ResponseAPI(HttpStatus.OK.value(), notes));
     }
 
-    @PostMapping
+    @GetMapping(value = "/{idSubdomain}/{idNote}")
+    ResponseEntity<ResponseAPI> getNoteByID(@PathVariable UUID idNote,
+                                                   @PathVariable UUID idSubdomain, @AuthenticationPrincipal User user) {
+        var note = noteService.getNoteByID(idNote, user, idSubdomain);
+        return ResponseEntity.ok().body(new ResponseAPI(HttpStatus.OK.value(), note));
+    }
+
+    @PostMapping(value = "/register")
     ResponseEntity<ResponseAPI> register(@RequestBody @Valid RegisterNoteDTO dto, @AuthenticationPrincipal User user) {
-        noteService.register(dto, user);
-        return ResponseEntity.status(HttpStatus.CREATED.value()).body(new ResponseAPI(HttpStatus.CREATED.value(), null));
+        var note = noteService.register(dto, user);
+        return ResponseEntity.status(HttpStatus.CREATED.value()).body(new ResponseAPI(HttpStatus.CREATED.value(), note));
     }
 
 }
