@@ -12,7 +12,7 @@ import java.util.UUID;
 
 public record RegisterNoteDTO(
         @NotBlank(message = "O título é obrigatório.") String title,
-        @NotNull(message = "O subdomínio é obrigatório.") UUID idSubdomain,
+        UUID idSubdomain,
         String content,
         UUID idNote
 ) {
