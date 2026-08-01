@@ -1,5 +1,6 @@
 package com.agpf.workhub.services.notes;
 
+import com.agpf.workhub.dtos.http.PageResponseDTO;
 import com.agpf.workhub.dtos.notes.OutputNoteDTO;
 import com.agpf.workhub.dtos.notes.RegisterNoteDTO;
 import com.agpf.workhub.exceptions.NotFoundException;
@@ -10,10 +11,10 @@ import com.agpf.workhub.repositories.notes.NoteRepository;
 import com.agpf.workhub.services.subdomains.SubdomainAccessService;
 import com.agpf.workhub.utils.UtilsService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -47,13 +48,16 @@ public class NoteService {
         return noteRepository.save(note);
     }
 
-    public List<OutputNoteDTO> getBySubdmainAndUser(UUID idSubdomain, User user) {
+    public PageResponseDTO<OutputNoteDTO> getBySubdmainAndUser(UUID idSubdomain, User user, int page) {
+        var pageable = PageRequest.of(page, 10);
+
         if (idSubdomain != null) {
             var subdomain = subdomainAccessService.resolve(user, idSubdomain);
-            return noteRepository.findByUserAndSubdomain(user, subdomain);
+            var notes = noteRepository.findByUserAndSubdomain(user, subdomain, pageable);
+            return PageResponseDTO.fromPage(notes);
         }
 
-        return noteRepository.findByUser(user);
+        return PageResponseDTO.fromPage(noteRepository.findByUser(user, pageable));
     }
 
     public OutputNoteDTO getNoteByID(UUID idNote, User user, UUID idSubdomain) {

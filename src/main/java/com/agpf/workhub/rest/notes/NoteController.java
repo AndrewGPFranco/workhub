@@ -24,8 +24,8 @@ public class NoteController {
     private final NoteService noteService;
 
     @GetMapping(value = {"", "/"})
-    ResponseEntity<ResponseAPI> getByUser(@AuthenticationPrincipal User user) {
-        var notes = noteService.getBySubdmainAndUser(null, user);
+    ResponseEntity<ResponseAPI> getByUser(@AuthenticationPrincipal User user, @RequestParam int page) {
+        var notes = noteService.getBySubdmainAndUser(null, user, page);
         return ResponseEntity.ok(new ResponseAPI(HttpStatus.OK.value(), notes));
     }
 
@@ -36,8 +36,9 @@ public class NoteController {
     }
 
     @GetMapping(value = "/subdomain/{idSubdomain}")
-    ResponseEntity<ResponseAPI> getBySubdmainAndUser(@PathVariable UUID idSubdomain, @AuthenticationPrincipal User user) {
-        var notes = noteService.getBySubdmainAndUser(idSubdomain, user);
+    ResponseEntity<ResponseAPI> getBySubdmainAndUser(@PathVariable UUID idSubdomain,
+                                                     @AuthenticationPrincipal User user, @RequestParam int page) {
+        var notes = noteService.getBySubdmainAndUser(idSubdomain, user, page);
         return ResponseEntity.ok().body(new ResponseAPI(HttpStatus.OK.value(), notes));
     }
 
