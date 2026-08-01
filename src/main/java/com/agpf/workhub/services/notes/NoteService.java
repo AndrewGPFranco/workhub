@@ -23,24 +23,25 @@ public class NoteService {
 
     private final NoteRepository noteRepository;
     private final SubdomainAccessService subdomainAccessService;
+    private static final String ANNOTATION_NOT_FOUND = "Anotação não encontrada!";
 
     @Transactional
-    public Note register(RegisterNoteDTO dto, User user) {
+    public OutputNoteDTO register(RegisterNoteDTO dto, User user) {
         Subdomain subdomain = null;
 
         if (dto.idSubdomain() != null)
             subdomain = subdomainAccessService.resolve(user, dto.idSubdomain());
 
         if (dto.idNote() != null)
-            return updateNote(dto);
+            return OutputNoteDTO.fromEntity(updateNote(dto, user));
         else {
             var entity = RegisterNoteDTO.toEntity(dto, user, subdomain);
-            return noteRepository.save(entity);
+            return OutputNoteDTO.fromEntity(noteRepository.save(entity));
         }
     }
 
-    private Note updateNote(RegisterNoteDTO dto) {
-        var note = noteRepository.findById(dto.idNote()).orElseThrow(() -> new NotFoundException("Anotação não encontrada!"));
+    private Note updateNote(RegisterNoteDTO dto, User user) {
+        var note = noteRepository.findByIdAndUser(dto.idNote(), user).orElseThrow(() -> new NotFoundException(ANNOTATION_NOT_FOUND));
 
         UtilsService.updateField(dto.title(), note::setTitle);
         UtilsService.updateField(dto.content(), note::setContent);
@@ -54,24 +55,28 @@ public class NoteService {
         if (idSubdomain != null) {
             var subdomain = subdomainAccessService.resolve(user, idSubdomain);
             var notes = noteRepository.findByUserAndSubdomain(user, subdomain, pageable);
-            return PageResponseDTO.fromPage(notes);
+            return PageResponseDTO.fromPage(notes.map(OutputNoteDTO::fromEntity));
         }
 
-        return PageResponseDTO.fromPage(noteRepository.findByUser(user, pageable));
+        return PageResponseDTO.fromPage(noteRepository.findByUser(user, pageable).map(OutputNoteDTO::fromEntity));
     }
 
     public OutputNoteDTO getNoteByID(UUID idNote, User user, UUID idSubdomain) {
         if (idSubdomain != null) {
             var subdomain = subdomainAccessService.resolve(user, idSubdomain);
-            return noteRepository.findByUserAndIdAndSubdomain(user, idNote, subdomain);
+            return noteRepository.findByIdAndUserAndSubdomain(idNote, user, subdomain)
+                    .map(OutputNoteDTO::fromEntity)
+                    .orElseThrow(() -> new NotFoundException(ANNOTATION_NOT_FOUND));
         }
 
-        return noteRepository.findByUserAndId(user, idNote);
+        return noteRepository.findByIdAndUser(idNote, user)
+                .map(OutputNoteDTO::fromEntity).orElseThrow(() -> new NotFoundException(ANNOTATION_NOT_FOUND));
     }
 
     @Transactional
-    public String deleteNote(UUID idNote) {
-        noteRepository.deleteById(idNote);
+    public String deleteNote(UUID idNote, User user) {
+        var note = noteRepository.findByIdAndUser(idNote, user).orElseThrow(() -> new NotFoundException(ANNOTATION_NOT_FOUND));
+        noteRepository.delete(note);
         return "Anotação deletada com sucesso!";
     }
 }

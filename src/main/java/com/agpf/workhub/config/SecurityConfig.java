@@ -1,6 +1,5 @@
 package com.agpf.workhub.config;
 
-import org.springframework.boot.flyway.autoconfigure.FlywayMigrationStrategy;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -59,14 +58,6 @@ public class SecurityConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**").allowedMethods("*");
-    }
-
-    @Bean
-    public FlywayMigrationStrategy cleanMigrateStrategy() {
-        return flyway -> {
-            flyway.repair();
-            flyway.migrate();
-        };
     }
 
 }

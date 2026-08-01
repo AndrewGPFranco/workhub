@@ -56,8 +56,8 @@ public class NoteController {
     }
 
     @DeleteMapping(value = "/delete/{idNote}")
-    ResponseEntity<ResponseAPI> deleteNote(@PathVariable UUID idNote) {
-        var response = noteService.deleteNote(idNote);
+    ResponseEntity<ResponseAPI> deleteNote(@PathVariable UUID idNote, @AuthenticationPrincipal User user) {
+        var response = noteService.deleteNote(idNote, user);
         return ResponseEntity.status(HttpStatus.OK.value()).body(new ResponseAPI(HttpStatus.OK.value(), response));
     }
 
