@@ -4,6 +4,7 @@ import com.agpf.workhub.dtos.notes.OutputNoteDTO;
 import com.agpf.workhub.dtos.notes.RegisterNoteDTO;
 import com.agpf.workhub.exceptions.NotFoundException;
 import com.agpf.workhub.models.notes.Note;
+import com.agpf.workhub.models.subdomains.Subdomain;
 import com.agpf.workhub.models.user.User;
 import com.agpf.workhub.repositories.notes.NoteRepository;
 import com.agpf.workhub.services.subdomains.SubdomainAccessService;
@@ -24,7 +25,10 @@ public class NoteService {
 
     @Transactional
     public Note register(RegisterNoteDTO dto, User user) {
-        var subdomain = subdomainAccessService.resolve(user, dto.idSubdomain());
+        Subdomain subdomain = null;
+
+        if (dto.idSubdomain() != null)
+            subdomain = subdomainAccessService.resolve(user, dto.idSubdomain());
 
         if (dto.idNote() != null)
             return updateNote(dto);
@@ -43,13 +47,27 @@ public class NoteService {
         return noteRepository.save(note);
     }
 
-    public List<OutputNoteDTO> getNotesBySubdmain(UUID idSubdomain, User user) {
-        var subdomain = subdomainAccessService.resolve(user, idSubdomain);
-        return noteRepository.findByUserAndSubdomain(user, subdomain);
+    public List<OutputNoteDTO> getBySubdmainAndUser(UUID idSubdomain, User user) {
+        if (idSubdomain != null) {
+            var subdomain = subdomainAccessService.resolve(user, idSubdomain);
+            return noteRepository.findByUserAndSubdomain(user, subdomain);
+        }
+
+        return noteRepository.findByUser(user);
     }
 
     public OutputNoteDTO getNoteByID(UUID idNote, User user, UUID idSubdomain) {
-        var subdomain = subdomainAccessService.resolve(user, idSubdomain);
-        return noteRepository.findByUserAndIdAndSubdomain(user, idNote, subdomain);
+        if (idSubdomain != null) {
+            var subdomain = subdomainAccessService.resolve(user, idSubdomain);
+            return noteRepository.findByUserAndIdAndSubdomain(user, idNote, subdomain);
+        }
+
+        return noteRepository.findByUserAndId(user, idNote);
+    }
+
+    @Transactional
+    public String deleteNote(UUID idNote) {
+        noteRepository.deleteById(idNote);
+        return "Anotação deletada com sucesso!";
     }
 }

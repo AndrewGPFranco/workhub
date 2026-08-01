@@ -65,7 +65,6 @@ public class Note {
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @NotNull(message = "O subdomínio é obrigatório.")
     @JoinColumn(name = "subdomain_id", nullable = false)
     private Subdomain subdomain;
 

@@ -1,0 +1,1 @@
+ALTER TABLE notes ALTER COLUMN subdomain_id DROP NOT NULL;

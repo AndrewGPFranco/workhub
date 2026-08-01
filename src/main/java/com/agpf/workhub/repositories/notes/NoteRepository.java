@@ -34,4 +34,23 @@ public interface NoteRepository extends JpaRepository<Note, UUID> {
     OutputNoteDTO findByUserAndIdAndSubdomain(
             @Param("user") User user, @Param("idNote") UUID idNote, @Param("subdomain") Subdomain subdomain);
 
+    @Query(
+            """
+                    select new com.agpf.workhub.dtos.notes.OutputNoteDTO(
+                        n.id, n.title, n.isArchived, n.isPinned, n.content, n.createdAt, n.updatedAt
+                    ) from Note n where n.user = :user
+                    """
+    )
+    List<OutputNoteDTO> findByUser(@Param("user") User user);
+
+    @Query(
+            """
+                    select new com.agpf.workhub.dtos.notes.OutputNoteDTO(
+                        n.id, n.title, n.isArchived, n.isPinned, n.content, n.createdAt, n.updatedAt
+                    ) from Note n where n.user = :user and n.id = :idNote
+                    """
+    )
+    OutputNoteDTO findByUserAndId(@Param("user") User user, @Param("idNote") UUID idNote);
+
+    UUID id(UUID id);
 }

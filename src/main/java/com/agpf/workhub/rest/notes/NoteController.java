@@ -4,7 +4,6 @@ import com.agpf.workhub.annotations.PlanResource;
 import com.agpf.workhub.dtos.http.ResponseAPI;
 import com.agpf.workhub.dtos.notes.RegisterNoteDTO;
 import com.agpf.workhub.enums.plan.PlanResourceType;
-import com.agpf.workhub.models.notes.Note;
 import com.agpf.workhub.models.user.User;
 import com.agpf.workhub.services.notes.NoteService;
 import jakarta.validation.Valid;
@@ -24,15 +23,27 @@ public class NoteController {
 
     private final NoteService noteService;
 
-    @GetMapping(value = "/{idSubdomain}")
-    ResponseEntity<ResponseAPI> getBySubdmain(@PathVariable UUID idSubdomain, @AuthenticationPrincipal User user) {
-        var notes = noteService.getNotesBySubdmain(idSubdomain, user);
+    @GetMapping(value = {"", "/"})
+    ResponseEntity<ResponseAPI> getByUser(@AuthenticationPrincipal User user) {
+        var notes = noteService.getBySubdmainAndUser(null, user);
+        return ResponseEntity.ok(new ResponseAPI(HttpStatus.OK.value(), notes));
+    }
+
+    @GetMapping(value = "/{idNote}")
+    ResponseEntity<ResponseAPI> getNoteByID(@PathVariable UUID idNote, @AuthenticationPrincipal User user) {
+        var note = noteService.getNoteByID(idNote, user, null);
+        return ResponseEntity.ok().body(new ResponseAPI(HttpStatus.OK.value(), note));
+    }
+
+    @GetMapping(value = "/subdomain/{idSubdomain}")
+    ResponseEntity<ResponseAPI> getBySubdmainAndUser(@PathVariable UUID idSubdomain, @AuthenticationPrincipal User user) {
+        var notes = noteService.getBySubdmainAndUser(idSubdomain, user);
         return ResponseEntity.ok().body(new ResponseAPI(HttpStatus.OK.value(), notes));
     }
 
-    @GetMapping(value = "/{idSubdomain}/{idNote}")
-    ResponseEntity<ResponseAPI> getNoteByID(@PathVariable UUID idNote,
-                                                   @PathVariable UUID idSubdomain, @AuthenticationPrincipal User user) {
+    @GetMapping(value = "/subdomain/{idSubdomain}/{idNote}")
+    ResponseEntity<ResponseAPI> getNoteByIDAndSubdomain(@PathVariable UUID idNote,
+                                                        @PathVariable UUID idSubdomain, @AuthenticationPrincipal User user) {
         var note = noteService.getNoteByID(idNote, user, idSubdomain);
         return ResponseEntity.ok().body(new ResponseAPI(HttpStatus.OK.value(), note));
     }
@@ -41,6 +52,12 @@ public class NoteController {
     ResponseEntity<ResponseAPI> register(@RequestBody @Valid RegisterNoteDTO dto, @AuthenticationPrincipal User user) {
         var note = noteService.register(dto, user);
         return ResponseEntity.status(HttpStatus.CREATED.value()).body(new ResponseAPI(HttpStatus.CREATED.value(), note));
+    }
+
+    @DeleteMapping(value = "/delete/{idNote}")
+    ResponseEntity<ResponseAPI> deleteNote(@PathVariable UUID idNote) {
+        var response = noteService.deleteNote(idNote);
+        return ResponseEntity.status(HttpStatus.OK.value()).body(new ResponseAPI(HttpStatus.OK.value(), response));
     }
 
 }
