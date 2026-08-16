@@ -6,6 +6,7 @@ import com.agpf.workhub.dtos.demands.InputObservationDTO;
 import com.agpf.workhub.dtos.demands.RegisterDemandDTO;
 import com.agpf.workhub.dtos.http.ResponseAPI;
 import com.agpf.workhub.enums.demands.PriorityDemandType;
+import com.agpf.workhub.enums.demands.SprintType;
 import com.agpf.workhub.enums.demands.StatusDemandType;
 import com.agpf.workhub.enums.plan.PlanResourceType;
 import com.agpf.workhub.models.user.User;
@@ -46,8 +47,9 @@ public class DemandController {
                                           @RequestParam(required = false) UUID subdomainId,
                                           @RequestParam(required = false) StatusDemandType status,
                                           @RequestParam(required = false) PriorityDemandType priority,
+                                          @RequestParam(required = false) SprintType sprint,
                                           @AuthenticationPrincipal User user) {
-        var response = demandService.getByUser(page, user, status, priority, subdomainId);
+        var response = demandService.getByUser(page, user, status, priority, sprint, subdomainId);
         return ResponseEntity.ok(new ResponseAPI(HttpStatus.OK.value(), response));
     }
 

@@ -6,6 +6,7 @@ import com.agpf.workhub.dtos.demands.OutputDemandDTO;
 import com.agpf.workhub.dtos.demands.RegisterDemandDTO;
 import com.agpf.workhub.dtos.http.PageResponseDTO;
 import com.agpf.workhub.enums.demands.PriorityDemandType;
+import com.agpf.workhub.enums.demands.SprintType;
 import com.agpf.workhub.enums.demands.StatusDemandType;
 import com.agpf.workhub.exceptions.BusinessException;
 import com.agpf.workhub.exceptions.NotFoundException;
@@ -48,10 +49,17 @@ public class DemandService {
     }
 
     public List<PageResponseDTO<OutputDemandDTO>> getByUser(int page, User user, StatusDemandType status,
-                                                      PriorityDemandType priority, UUID subdomainId) {
+                                                            PriorityDemandType priority, SprintType sprint, UUID subdomainId) {
         var subdomain = subdomainAccessService.resolve(user, subdomainId);
 
         var demandList = new ArrayList<PageResponseDTO<OutputDemandDTO>>();
+
+        if (sprint != null) {
+            var demands = demandRepository.buscarDemandsPorSprint(user.getId(),
+                    subdomain == null ? null : subdomain.getId(), sprint, PageRequest.of(page, 5));
+
+            return List.of(PageResponseDTO.fromPage(demands.map(OutputDemandDTO::fromEntity)));
+        }
 
         if (status != null) {
             var demands = demandRepository.findByUserAndSubdomainAndFilters(user.getId(),
