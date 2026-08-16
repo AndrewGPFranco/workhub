@@ -1,6 +1,7 @@
 package com.agpf.workhub.models.demands;
 
 import com.agpf.workhub.enums.demands.PriorityDemandType;
+import com.agpf.workhub.enums.demands.SprintType;
 import com.agpf.workhub.enums.demands.StatusDemandType;
 import com.agpf.workhub.models.subdomains.Subdomain;
 import com.agpf.workhub.models.user.User;
@@ -76,5 +77,10 @@ public class Demand {
 
     @OneToMany(mappedBy = "demand", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     List<Observation> observations;
+
+    @Enumerated(EnumType.STRING)
+    @NotNull(message = "A sprint é necessária.")
+    @Column(name = "sprint", nullable = false, length = 10)
+    private SprintType sprint;
 
 }
