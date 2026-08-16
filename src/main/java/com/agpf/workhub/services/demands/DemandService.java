@@ -96,6 +96,7 @@ public class DemandService {
         demand.setObservationsToReview(dto.observationsToReview());
         demand.setPriority(dto.priority());
         demand.setSubdomain(subdomainAccessService.resolve(user, dto.subdomainId()));
+        demand.setSprint(dto.sprint());
 
         if (dto.finalizedAt() != null) {
             demand.setStatus(StatusDemandType.DONE);

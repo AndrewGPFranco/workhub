@@ -65,7 +65,8 @@ class DemandServiceTest extends BaseTest {
     void testEditDemand() {
         var demand = getDemand();
         var dto = new EditDemandDTO("Demanda atualizada", "Descrição atualizada", null,
-                StatusDemandType.DONE, "Entregue no prazo.", PriorityDemandType.HIGH, null, null, null);
+                StatusDemandType.DONE, "Entregue no prazo.", PriorityDemandType.HIGH, null,
+                null, null, SprintType.CURRENT);
 
         Mockito.when(demandRepository.findById(demand.getId())).thenReturn(Optional.of(demand));
 
