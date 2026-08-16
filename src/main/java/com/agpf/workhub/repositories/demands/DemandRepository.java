@@ -46,9 +46,10 @@ public interface DemandRepository extends JpaRepository<Demand, UUID> {
             SELECT d
             FROM Demand d
             WHERE d.user.id = :userId AND d.sprint = :sprint
+                        AND (:priority IS NULL OR d.priority = :priority)
               AND ((:idSubdomain IS NULL AND d.subdomain IS NULL) OR d.subdomain.id = :idSubdomain)
             ORDER BY d.createdAt DESC
             """)
     Page<Demand> buscarDemandsPorSprint(@Param("userId") Long userId, @Param("idSubdomain") UUID idSubdomain,
-                                        @Param("sprint") SprintType sprint, Pageable pageable);
+                                        @Param("priority") PriorityDemandType priority, @Param("sprint") SprintType sprint, Pageable pageable);
 }

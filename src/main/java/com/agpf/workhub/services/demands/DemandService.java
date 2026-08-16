@@ -55,8 +55,8 @@ public class DemandService {
         var demandList = new ArrayList<PageResponseDTO<OutputDemandDTO>>();
 
         if (sprint != null) {
-            var demands = demandRepository.buscarDemandsPorSprint(user.getId(),
-                    subdomain == null ? null : subdomain.getId(), sprint, PageRequest.of(page, 5));
+            var demands = demandRepository.buscarDemandsPorSprint(user.getId(), subdomain == null ? null : subdomain.getId(),
+                    priority, sprint, PageRequest.of(page, 5));
 
             return List.of(PageResponseDTO.fromPage(demands.map(OutputDemandDTO::fromEntity)));
         }
