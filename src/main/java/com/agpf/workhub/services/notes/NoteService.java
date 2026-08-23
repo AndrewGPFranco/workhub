@@ -58,7 +58,7 @@ public class NoteService {
             return PageResponseDTO.fromPage(notes.map(OutputNoteDTO::fromEntity));
         }
 
-        return PageResponseDTO.fromPage(noteRepository.findByUser(user, pageable).map(OutputNoteDTO::fromEntity));
+        return PageResponseDTO.fromPage(noteRepository.buscarNotasDoUsuarioSemSubdominio(user.getId(), pageable).map(OutputNoteDTO::fromEntity));
     }
 
     public OutputNoteDTO getNoteByID(UUID idNote, User user, UUID idSubdomain) {

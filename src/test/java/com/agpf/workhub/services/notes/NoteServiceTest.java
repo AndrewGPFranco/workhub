@@ -101,7 +101,7 @@ class NoteServiceTest extends BaseTest {
     void shouldMapNotesToDtosWhenListing() {
         var user = getUser();
         var note = note(user);
-        when(noteRepository.findByUser(any(User.class), any())).thenReturn(new PageImpl<>(List.of(note)));
+        when(noteRepository.buscarNotasDoUsuarioSemSubdominio(any(Long.class), any())).thenReturn(new PageImpl<>(List.of(note)));
 
         var result = noteService.getBySubdmainAndUser(null, user, 0);
 
