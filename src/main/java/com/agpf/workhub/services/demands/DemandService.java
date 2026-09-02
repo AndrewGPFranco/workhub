@@ -1,9 +1,6 @@
 package com.agpf.workhub.services.demands;
 
-import com.agpf.workhub.dtos.demands.EditDemandDTO;
-import com.agpf.workhub.dtos.demands.InputObservationDTO;
-import com.agpf.workhub.dtos.demands.OutputDemandDTO;
-import com.agpf.workhub.dtos.demands.RegisterDemandDTO;
+import com.agpf.workhub.dtos.demands.*;
 import com.agpf.workhub.dtos.http.PageResponseDTO;
 import com.agpf.workhub.enums.demands.PriorityDemandType;
 import com.agpf.workhub.enums.demands.SprintType;
@@ -159,5 +156,9 @@ public class DemandService {
         demandRepository.save(demand);
 
         return String.format("A demanda foi passado ao subdomínio alvo: %s", subdomain.getName());
+    }
+
+    public List<OutputDemandCronDTO> obterTodasDemandas() {
+        return demandRepository.buscarTodasDemandasDaSprintAtual();
     }
 }

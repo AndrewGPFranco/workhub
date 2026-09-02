@@ -1,5 +1,6 @@
 package com.agpf.workhub.repositories.demands;
 
+import com.agpf.workhub.dtos.demands.OutputDemandCronDTO;
 import com.agpf.workhub.enums.demands.PriorityDemandType;
 import com.agpf.workhub.enums.demands.SprintType;
 import com.agpf.workhub.enums.demands.StatusDemandType;
@@ -52,4 +53,16 @@ public interface DemandRepository extends JpaRepository<Demand, UUID> {
             """)
     Page<Demand> buscarDemandsPorSprint(@Param("userId") Long userId, @Param("idSubdomain") UUID idSubdomain,
                                         @Param("priority") PriorityDemandType priority, @Param("sprint") SprintType sprint, Pageable pageable);
+
+    @Query("""
+            SELECT new com.agpf.workhub.dtos.demands.OutputDemandCronDTO(
+                        d.user.id,
+                        d.id,
+                        d.title,
+                        d.createdAt
+            ) 
+            FROM Demand d
+            WHERE d.sprint = 'CURRENT' AND d.finalizedAt IS NULL
+            """)
+    List<OutputDemandCronDTO> buscarTodasDemandasDaSprintAtual();
 }
