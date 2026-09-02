@@ -11,3 +11,6 @@ auth:
     expiration-minutes: ${JWT_EXPIRATION_MINUTES:120}
 server:
   port: 9001
+api:
+  key:
+    admin: ${API_KEY_ADMIN}

@@ -35,7 +35,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        if (request.getRequestURI().startsWith("/api/admin")) {
+        var path = request.getServletPath();
+        boolean adminEndpoint = path.equals("/api/admin") || path.startsWith("/api/admin/");
+
+        if (adminEndpoint) {
             String apiKey = request.getHeader("X-API-Key");
 
             if (apiKey == null || !apiKey.equals(apiKeyAdmin)) {
