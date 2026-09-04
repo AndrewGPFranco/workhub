@@ -14,3 +14,6 @@ server:
 api:
   key:
     admin: ${API_KEY_ADMIN}
+services:
+  notifications:
+    url: http://localhost:3000
