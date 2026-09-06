@@ -17,7 +17,6 @@ public abstract class BaseEntity {
     private UUID id;
 
     @CreationTimestamp
-    @NotNull(message = "A data de criação é obrigatória.")
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 

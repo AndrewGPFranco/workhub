@@ -3,6 +3,7 @@ package com.agpf.workhub.dtos.demands;
 import com.agpf.workhub.enums.demands.PriorityDemandType;
 import com.agpf.workhub.enums.demands.StatusDemandType;
 import com.agpf.workhub.models.demands.Demand;
+import com.agpf.workhub.models.sprint.Sprint;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
@@ -26,17 +27,22 @@ public record OutputDemandDTO(
         LocalDate finalizedAt,
         UUID subdomainId,
         List<OutputObservationDTO> observations,
-        @NotNull String sprint
+        String sprint
 ) {
 
     public static OutputDemandDTO fromEntity(Demand demand) {
+        var sprintTitle = getTitleOfSprint(demand.getSprint());
+
         return OutputDemandDTO.builder().id(demand.getId()).title(demand.getTitle())
                 .observations(demand.getObservations().stream().map(OutputObservationDTO::fromEntity).toList())
                 .description(demand.getDescription()).deadline(demand.getDeadline()).finalizedAt(demand.getFinalizedAt())
                 .status(demand.getStatus()).priority(demand.getPriority()).createdAt(demand.getCreatedAt())
                 .updatedAt(demand.getUpdatedAt()).observationsToReview(demand.getObservationsToReview())
-                .sprint(demand.getSprint().getTitle())
-                .subdomainId(demand.getSubdomain() == null ? null : demand.getSubdomain().getId()).build();
+                .sprint(sprintTitle).subdomainId(demand.getSubdomain() == null ? null : demand.getSubdomain().getId()).build();
+    }
+
+    private static String getTitleOfSprint(Sprint sprint) {
+        return sprint != null ? sprint.getTitle() : null;
     }
 
 }
