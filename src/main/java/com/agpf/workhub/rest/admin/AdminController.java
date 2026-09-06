@@ -4,9 +4,7 @@ import com.agpf.workhub.dtos.demands.OutputDemandCronDTO;
 import com.agpf.workhub.services.demands.DemandService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -18,8 +16,8 @@ public class AdminController {
     private final DemandService demandService;
 
     @GetMapping(value = "/all-demands")
-    ResponseEntity<List<OutputDemandCronDTO>> obterTodasDemandas() {
-        return ResponseEntity.ok().body(demandService.obterTodasDemandas());
+    ResponseEntity<List<OutputDemandCronDTO>> obterTodasDemandas(@RequestParam String title) {
+        return ResponseEntity.ok().body(demandService.obterTodasDemandas(title));
     }
 
 }

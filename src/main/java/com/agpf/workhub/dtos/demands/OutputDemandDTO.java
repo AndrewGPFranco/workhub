@@ -1,7 +1,6 @@
 package com.agpf.workhub.dtos.demands;
 
 import com.agpf.workhub.enums.demands.PriorityDemandType;
-import com.agpf.workhub.enums.demands.SprintType;
 import com.agpf.workhub.enums.demands.StatusDemandType;
 import com.agpf.workhub.models.demands.Demand;
 import jakarta.validation.constraints.NotBlank;
@@ -27,7 +26,7 @@ public record OutputDemandDTO(
         LocalDate finalizedAt,
         UUID subdomainId,
         List<OutputObservationDTO> observations,
-        @NotNull SprintType sprint
+        @NotNull String sprint
 ) {
 
     public static OutputDemandDTO fromEntity(Demand demand) {
@@ -35,7 +34,8 @@ public record OutputDemandDTO(
                 .observations(demand.getObservations().stream().map(OutputObservationDTO::fromEntity).toList())
                 .description(demand.getDescription()).deadline(demand.getDeadline()).finalizedAt(demand.getFinalizedAt())
                 .status(demand.getStatus()).priority(demand.getPriority()).createdAt(demand.getCreatedAt())
-                .updatedAt(demand.getUpdatedAt()).observationsToReview(demand.getObservationsToReview()).sprint(demand.getSprint())
+                .updatedAt(demand.getUpdatedAt()).observationsToReview(demand.getObservationsToReview())
+                .sprint(demand.getSprint().getTitle())
                 .subdomainId(demand.getSubdomain() == null ? null : demand.getSubdomain().getId()).build();
     }
 

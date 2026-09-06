@@ -2,7 +2,6 @@ package com.agpf.workhub.repositories.demands;
 
 import com.agpf.workhub.dtos.demands.OutputDemandCronDTO;
 import com.agpf.workhub.enums.demands.PriorityDemandType;
-import com.agpf.workhub.enums.demands.SprintType;
 import com.agpf.workhub.enums.demands.StatusDemandType;
 import com.agpf.workhub.models.demands.Demand;
 import org.springframework.data.domain.Page;
@@ -46,13 +45,13 @@ public interface DemandRepository extends JpaRepository<Demand, UUID> {
     @Query("""
             SELECT d
             FROM Demand d
-            WHERE d.user.id = :userId AND d.sprint = :sprint
+            WHERE d.user.id = :userId AND d.sprint.title = :sprint
                         AND (:priority IS NULL OR d.priority = :priority)
               AND ((:idSubdomain IS NULL AND d.subdomain IS NULL) OR d.subdomain.id = :idSubdomain)
             ORDER BY d.createdAt DESC
             """)
     Page<Demand> buscarDemandsPorSprint(@Param("userId") Long userId, @Param("idSubdomain") UUID idSubdomain,
-                                        @Param("priority") PriorityDemandType priority, @Param("sprint") SprintType sprint, Pageable pageable);
+                                        @Param("priority") PriorityDemandType priority, @Param("sprint") String sprint, Pageable pageable);
 
     @Query("""
             SELECT new com.agpf.workhub.dtos.demands.OutputDemandCronDTO(
@@ -62,7 +61,7 @@ public interface DemandRepository extends JpaRepository<Demand, UUID> {
                         d.createdAt
             ) 
             FROM Demand d
-            WHERE d.sprint = 'CURRENT' AND d.finalizedAt IS NULL
+            WHERE d.sprint.title = :title AND d.finalizedAt IS NULL
             """)
-    List<OutputDemandCronDTO> buscarTodasDemandasDaSprintAtual();
+    List<OutputDemandCronDTO> buscarTodasDemandasDaSprintAtual(@Param("title") String title);
 }

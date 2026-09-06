@@ -1,7 +1,6 @@
 package com.agpf.workhub;
 
 import com.agpf.workhub.enums.demands.PriorityDemandType;
-import com.agpf.workhub.enums.demands.SprintType;
 import com.agpf.workhub.enums.demands.StatusDemandType;
 import com.agpf.workhub.models.demands.Demand;
 import com.agpf.workhub.models.user.User;
@@ -31,7 +30,7 @@ public abstract class BaseTest {
     public Demand getDemand() {
         return new Demand(UUID.randomUUID(), getUser(), "Demanda importante", "Programar utilizando TDD",
                 null, StatusDemandType.ONGOING, LocalDateTime.now(), null, null,
-                PriorityDemandType.LOW, null, null, null, SprintType.CURRENT);
+                PriorityDemandType.LOW, null, null, null, null);
     }
 
 }

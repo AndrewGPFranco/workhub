@@ -1,7 +1,6 @@
 package com.agpf.workhub.dtos.demands;
 
 import com.agpf.workhub.enums.demands.PriorityDemandType;
-import com.agpf.workhub.enums.demands.SprintType;
 import com.agpf.workhub.enums.demands.StatusDemandType;
 
 import java.time.LocalDate;
@@ -17,6 +16,6 @@ public record EditDemandDTO(
         LocalDate finalizedAt,
         UUID subdomainId,
         InputObservationDTO observations,
-        SprintType sprint
+        String sprint
 ) {
 }

@@ -3,13 +3,14 @@ package com.agpf.workhub.services.demands;
 import com.agpf.workhub.dtos.demands.*;
 import com.agpf.workhub.dtos.http.PageResponseDTO;
 import com.agpf.workhub.enums.demands.PriorityDemandType;
-import com.agpf.workhub.enums.demands.SprintType;
 import com.agpf.workhub.enums.demands.StatusDemandType;
 import com.agpf.workhub.exceptions.BusinessException;
 import com.agpf.workhub.exceptions.NotFoundException;
+import com.agpf.workhub.models.sprint.Sprint;
 import com.agpf.workhub.models.user.User;
 import com.agpf.workhub.repositories.demands.DemandRepository;
 import com.agpf.workhub.repositories.demands.ObservationRepository;
+import com.agpf.workhub.repositories.sprint.SprintRepository;
 import com.agpf.workhub.repositories.subdomains.SubdomainRepository;
 import com.agpf.workhub.services.subdomains.SubdomainAccessService;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import static com.agpf.workhub.utils.DateUtils.getLocalDateAmericaSP;
@@ -28,6 +30,7 @@ import static com.agpf.workhub.utils.DateUtils.getLocalDateAmericaSP;
 public class DemandService {
 
     private final DemandRepository demandRepository;
+    private final SprintRepository sprintRepository;
     private final SubdomainRepository subdomainRepository;
     private final ObservationRepository observationRepository;
     private final SubdomainAccessService subdomainAccessService;
@@ -38,15 +41,21 @@ public class DemandService {
     public String createDemand(RegisterDemandDTO dto, User user) {
         var subdomain = subdomainAccessService.resolve(user, dto.subdomainId());
 
-        var demand = dto.toEntity(user, subdomain);
+        var optionalSprint = getSprintByTitle(dto.sprint()).orElse(null);
+
+        var demand = dto.toEntity(user, subdomain, optionalSprint);
 
         var saved = demandRepository.save(demand);
 
         return String.format("Demanda: '%s' foi registrada com sucesso!", saved.getTitle());
     }
 
+    private Optional<Sprint> getSprintByTitle(String sprintTitle) {
+        return sprintRepository.findByTitle(sprintTitle);
+    }
+
     public List<PageResponseDTO<OutputDemandDTO>> getByUser(int page, User user, StatusDemandType status,
-                                                            PriorityDemandType priority, SprintType sprint, UUID subdomainId) {
+                                                            PriorityDemandType priority, String sprint, UUID subdomainId) {
         var subdomain = subdomainAccessService.resolve(user, subdomainId);
 
         var demandList = new ArrayList<PageResponseDTO<OutputDemandDTO>>();
@@ -93,7 +102,7 @@ public class DemandService {
         demand.setObservationsToReview(dto.observationsToReview());
         demand.setPriority(dto.priority());
         demand.setSubdomain(subdomainAccessService.resolve(user, dto.subdomainId()));
-        demand.setSprint(dto.sprint());
+        demand.setSprint(getSprintByTitle(dto.sprint()).orElse(null));
 
         if (dto.finalizedAt() != null) {
             demand.setStatus(StatusDemandType.DONE);
@@ -158,7 +167,7 @@ public class DemandService {
         return String.format("A demanda foi passado ao subdomínio alvo: %s", subdomain.getName());
     }
 
-    public List<OutputDemandCronDTO> obterTodasDemandas() {
-        return demandRepository.buscarTodasDemandasDaSprintAtual();
+    public List<OutputDemandCronDTO> obterTodasDemandas(String title) {
+        return demandRepository.buscarTodasDemandasDaSprintAtual(title);
     }
 }

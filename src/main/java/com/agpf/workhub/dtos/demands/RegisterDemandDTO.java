@@ -1,9 +1,9 @@
 package com.agpf.workhub.dtos.demands;
 
 import com.agpf.workhub.enums.demands.PriorityDemandType;
-import com.agpf.workhub.enums.demands.SprintType;
 import com.agpf.workhub.enums.demands.StatusDemandType;
 import com.agpf.workhub.models.demands.Demand;
+import com.agpf.workhub.models.sprint.Sprint;
 import com.agpf.workhub.models.subdomains.Subdomain;
 import com.agpf.workhub.models.user.User;
 import com.agpf.workhub.utils.DateUtils;
@@ -22,10 +22,10 @@ public record RegisterDemandDTO(
         String observationToReview,
         UUID subdomainId,
         InputObservationDTO observations,
-        @NotNull SprintType sprint
+        @NotNull String sprint
 ) {
 
-    public Demand toEntity(User user, Subdomain subdomain) {
+    public Demand toEntity(User user, Subdomain subdomain, Sprint sprint) {
         var demand = Demand.builder().user(user).title(title).createdAt(DateUtils.getLocalDateTimeAmericaSP()).updatedAt(null)
                 .observationsToReview(observationToReview).description(description).deadline(deadline).sprint(sprint)
                 .observations(null).status(status).priority(priority).subdomain(subdomain).build();
