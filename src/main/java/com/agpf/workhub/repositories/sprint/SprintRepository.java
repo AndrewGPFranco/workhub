@@ -1,5 +1,6 @@
 package com.agpf.workhub.repositories.sprint;
 
+import com.agpf.workhub.dtos.sprints.InputDemandsToSprintDTO;
 import com.agpf.workhub.models.sprint.Sprint;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.data.jpa.repository.JpaRepository;

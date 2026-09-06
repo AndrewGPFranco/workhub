@@ -2,6 +2,7 @@ package com.agpf.workhub.rest.sprints;
 
 import com.agpf.workhub.annotations.PlanResource;
 import com.agpf.workhub.dtos.http.ResponseAPI;
+import com.agpf.workhub.dtos.sprints.InputDemandsToSprintDTO;
 import com.agpf.workhub.dtos.sprints.InputSprintDTO;
 import com.agpf.workhub.enums.plan.PlanResourceType;
 import com.agpf.workhub.models.user.User;
@@ -32,6 +33,12 @@ public class SprintController {
     @PostMapping
     ResponseEntity<ResponseAPI> register(@AuthenticationPrincipal User user, @RequestBody @Valid InputSprintDTO dto) {
         return ResponseEntity.ok().body(new ResponseAPI(HttpStatus.CREATED.value(), sprintService.register(user, dto)));
+    }
+
+    @PostMapping(value = "/add-demands")
+    ResponseEntity<ResponseAPI> addDemandsToSprint(@AuthenticationPrincipal User user,
+                                                   @RequestBody @Valid InputDemandsToSprintDTO dto) {
+        return ResponseEntity.ok().body(new ResponseAPI(HttpStatus.CREATED.value(), sprintService.addDemandsToSprint(user, dto)));
     }
 
 }
