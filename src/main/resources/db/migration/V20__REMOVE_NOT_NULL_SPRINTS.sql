@@ -1,0 +1,1 @@
+ALTER TABLE sprints ALTER COLUMN subdomain_id DROP NOT NULL;

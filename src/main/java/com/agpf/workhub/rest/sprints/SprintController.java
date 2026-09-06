@@ -25,7 +25,7 @@ public class SprintController {
     private final SprintService sprintService;
 
     @GetMapping(value = "/by-user")
-    ResponseEntity<ResponseAPI> getSprintsByUser(@AuthenticationPrincipal User user, @RequestParam UUID idSubdomain) {
+    ResponseEntity<ResponseAPI> getSprintsByUser(@AuthenticationPrincipal User user, @RequestParam(required = false) UUID idSubdomain) {
         return ResponseEntity.ok().body(new ResponseAPI(HttpStatus.OK.value(),
                 sprintService.getSprintsByUserAndSubdomain(user, idSubdomain)));
     }

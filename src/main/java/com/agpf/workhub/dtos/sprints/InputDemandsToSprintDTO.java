@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.UUID;
 
 public record InputDemandsToSprintDTO(
-        @NotNull UUID idSubdomain,
+        UUID idSubdomain,
         @NotBlank String sprintTitle,
         @NotEmpty List<UUID> idDemands
 ) {

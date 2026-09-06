@@ -1,7 +1,6 @@
 package com.agpf.workhub.repositories.demands;
 
 import com.agpf.workhub.dtos.demands.OutputDemandCronDTO;
-import com.agpf.workhub.dtos.sprints.InputDemandsToSprintDTO;
 import com.agpf.workhub.enums.demands.PriorityDemandType;
 import com.agpf.workhub.enums.demands.StatusDemandType;
 import com.agpf.workhub.models.demands.Demand;
@@ -73,5 +72,11 @@ public interface DemandRepository extends JpaRepository<Demand, UUID> {
             UPDATE Demand d SET d.sprint = :sprint where d.subdomain.id = :idSubdomain and d.id IN :idsDemands
             """)
     void addDemandsToSprint(@Param("sprint") Sprint sprint, @Param("idsDemands") List<UUID> idDemands, @Param("idSubdomain") UUID idSubdomain);
+
+    @Modifying
+    @Query(value = """
+            UPDATE Demand d SET d.sprint = :sprint where d.id IN :idsDemands
+            """)
+    void addDemandsToSprint(@Param("sprint") Sprint sprint, @Param("idsDemands") List<UUID> idDemands);
 
 }

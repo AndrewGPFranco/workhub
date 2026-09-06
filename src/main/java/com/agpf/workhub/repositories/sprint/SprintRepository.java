@@ -1,7 +1,7 @@
 package com.agpf.workhub.repositories.sprint;
 
-import com.agpf.workhub.dtos.sprints.InputDemandsToSprintDTO;
 import com.agpf.workhub.models.sprint.Sprint;
+import com.agpf.workhub.models.user.User;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -15,10 +15,15 @@ import java.util.UUID;
 @Repository
 public interface SprintRepository extends JpaRepository<Sprint, UUID> {
 
-    Optional<Sprint> findByTitle(@NotNull String sprint);
+    Optional<Sprint> findByTitleAndUser(@NotNull String sprint, @NotNull User user);
 
     @Query(value = """
             select title from sprints where user_id = :idUser and subdomain_id = :idSubdomain
             """, nativeQuery = true)
-    List<String> getByUserAndSubdomain(@Param("idUser") Long idUser, @Param("idSubdomain") UUID idSubdomain);
+    List<String> getByUserAndSubdomainNull(@Param("idUser") Long idUser, @Param("idSubdomain") UUID idSubdomain);
+
+    @Query(value = """
+            select title from sprints where user_id = :idUser and subdomain_id is null
+            """, nativeQuery = true)
+    List<String> getByUserAndSubdomainNull(@Param("idUser") Long idUser);
 }

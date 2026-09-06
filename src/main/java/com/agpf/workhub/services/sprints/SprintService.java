@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -25,7 +24,10 @@ public class SprintService {
     private final SubdomainAccessService subdomainAccessService;
 
     public List<String> getSprintsByUserAndSubdomain(User user, UUID idSubdomain) {
-        return sprintRepository.getByUserAndSubdomain(user.getId(), idSubdomain);
+        if (idSubdomain == null)
+            return sprintRepository.getByUserAndSubdomainNull(user.getId());
+
+        return sprintRepository.getByUserAndSubdomainNull(user.getId(), idSubdomain);
     }
 
     @Transactional
@@ -44,10 +46,13 @@ public class SprintService {
     public String addDemandsToSprint(User user, InputDemandsToSprintDTO dto) {
         var subdomain = subdomainAccessService.resolve(user, dto.idSubdomain());
 
-        var sprint = sprintRepository.findByTitle(dto.sprintTitle())
+        var sprint = sprintRepository.findByTitleAndUser(dto.sprintTitle(), user)
                 .orElseThrow(() -> new NotFoundException("Sprint não encontrada!"));
 
-        demandRepository.addDemandsToSprint(sprint, dto.idDemands(), subdomain.getId());
+        if (subdomain == null)
+            demandRepository.addDemandsToSprint(sprint, dto.idDemands());
+        else
+            demandRepository.addDemandsToSprint(sprint, dto.idDemands(), subdomain.getId());
 
         return String.format("Demandas enviadas a Sprint: %s", dto.sprintTitle());
     }

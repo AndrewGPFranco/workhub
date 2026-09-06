@@ -41,7 +41,7 @@ public class DemandService {
     public String createDemand(RegisterDemandDTO dto, User user) {
         var subdomain = subdomainAccessService.resolve(user, dto.subdomainId());
 
-        var optionalSprint = getSprintByTitle(dto.sprint()).orElse(null);
+        var optionalSprint = getSprintByTitle(dto.sprint(), user).orElse(null);
 
         var demand = dto.toEntity(user, subdomain, optionalSprint);
 
@@ -50,8 +50,8 @@ public class DemandService {
         return String.format("Demanda: '%s' foi registrada com sucesso!", saved.getTitle());
     }
 
-    private Optional<Sprint> getSprintByTitle(String sprintTitle) {
-        return sprintRepository.findByTitle(sprintTitle);
+    private Optional<Sprint> getSprintByTitle(String sprintTitle, User user) {
+        return sprintRepository.findByTitleAndUser(sprintTitle, user);
     }
 
     public List<PageResponseDTO<OutputDemandDTO>> getByUser(int page, User user, StatusDemandType status,
@@ -102,7 +102,7 @@ public class DemandService {
         demand.setObservationsToReview(dto.observationsToReview());
         demand.setPriority(dto.priority());
         demand.setSubdomain(subdomainAccessService.resolve(user, dto.subdomainId()));
-        demand.setSprint(getSprintByTitle(dto.sprint()).orElse(null));
+        demand.setSprint(getSprintByTitle(dto.sprint(), user).orElse(null));
 
         if (dto.finalizedAt() != null) {
             demand.setStatus(StatusDemandType.DONE);

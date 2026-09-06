@@ -8,7 +8,7 @@ import java.util.UUID;
 
 public record InputSprintDTO(
         @NotBlank String title,
-        @NotNull UUID idSubdomain,
+        UUID idSubdomain,
         @NotNull LocalDate dateToUse
 ) {
 }
