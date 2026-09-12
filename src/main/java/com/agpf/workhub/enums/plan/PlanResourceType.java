@@ -6,7 +6,8 @@ public enum PlanResourceType {
     DEMANDS,
     FEEDBACK,
     SUBDOMAINS,
-    NOTES
+    NOTES,
+    NOTIFICATIONS
     ;
 
 }

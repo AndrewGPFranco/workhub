@@ -1,6 +1,8 @@
 package com.agpf.workhub.rest.notifications;
 
+import com.agpf.workhub.annotations.PlanResource;
 import com.agpf.workhub.dtos.http.ResponseAPI;
+import com.agpf.workhub.enums.plan.PlanResourceType;
 import com.agpf.workhub.models.user.User;
 import com.agpf.workhub.services.notifications.NotificationService;
 import lombok.RequiredArgsConstructor;
@@ -12,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping(value = "/notifications")
+@PlanResource(verify = PlanResourceType.NOTIFICATIONS)
 public class NotificationController {
 
     private final NotificationService notificationService;
