@@ -5,6 +5,9 @@ spring:
     url: jdbc:postgresql://${HOST_DB}:5432/${DB}
     username: ${USER_DB}
     password: ${PASSWORD_DB}
+  docker:
+    compose:
+      enabled: false
 auth:
   jwt:
     secret: ${JWT_SECRET}
