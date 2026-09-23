@@ -1,6 +1,7 @@
 package com.agpf.workhub.services.notes;
 
 import com.agpf.workhub.dtos.http.PageResponseDTO;
+import com.agpf.workhub.dtos.notes.NoteExportDTO;
 import com.agpf.workhub.dtos.notes.OutputNoteDTO;
 import com.agpf.workhub.dtos.notes.RegisterNoteDTO;
 import com.agpf.workhub.exceptions.NotFoundException;
@@ -11,10 +12,12 @@ import com.agpf.workhub.repositories.notes.NoteRepository;
 import com.agpf.workhub.services.subdomains.SubdomainAccessService;
 import com.agpf.workhub.utils.UtilsService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.nio.charset.StandardCharsets;
 import java.util.UUID;
 
 @Service
@@ -78,5 +81,12 @@ public class NoteService {
         var note = noteRepository.findByIdAndUser(idNote, user).orElseThrow(() -> new NotFoundException(ANNOTATION_NOT_FOUND));
         noteRepository.delete(note);
         return "Anotação deletada com sucesso!";
+    }
+
+    public NoteExportDTO exportarNota(UUID idNota, User user) {
+        OutputNoteDTO output = getNoteByID(idNota, user, null);
+
+        final String nomeArquivo = output.title().replace(" ", "-").concat(".txt");
+        return new NoteExportDTO(new ByteArrayResource(output.content().getBytes(StandardCharsets.UTF_8)), nomeArquivo);
     }
 }
