@@ -86,7 +86,7 @@ public class NoteService {
     public NoteExportDTO exportarNota(UUID idNota, User user) {
         OutputNoteDTO output = getNoteByID(idNota, user, null);
 
-        final String nomeArquivo = output.title().replace(" ", "-").concat(".txt");
+        final String nomeArquivo = output.title().replace(" ", "-").concat(".md");
         return new NoteExportDTO(new ByteArrayResource(output.content().getBytes(StandardCharsets.UTF_8)), nomeArquivo);
     }
 }
