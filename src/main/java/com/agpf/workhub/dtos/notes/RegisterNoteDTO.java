@@ -5,9 +5,7 @@ import com.agpf.workhub.models.subdomains.Subdomain;
 import com.agpf.workhub.models.user.User;
 import com.agpf.workhub.utils.DateUtils;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 
-import java.time.LocalDateTime;
 import java.util.UUID;
 
 public record RegisterNoteDTO(
