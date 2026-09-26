@@ -1,6 +1,5 @@
 package com.agpf.workhub.config.supabase;
 
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.client.RestClient;
@@ -18,7 +17,11 @@ public class SupabaseConfig {
     public RestClient restClient() {
         return RestClient.builder()
                 .defaultHeader("apikey", supabaseProperties.getSecret())
-                .baseUrl(supabaseProperties.getUrl()).build();
+                .baseUrl(
+                        supabaseProperties.getUrl()
+                                .concat("/storage/v1/object/").concat(supabaseProperties.getBucket())
+                )
+                .build();
     }
 
 }

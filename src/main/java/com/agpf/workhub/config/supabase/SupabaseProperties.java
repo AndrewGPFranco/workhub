@@ -15,6 +15,6 @@ public class SupabaseProperties {
     private String secret;
 
     @Value("${supabase.storage.bucket}")
-    private String storage;
+    private String bucket;
 
 }
