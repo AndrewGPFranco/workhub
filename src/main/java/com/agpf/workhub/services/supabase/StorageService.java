@@ -19,7 +19,8 @@ public class StorageService {
     public void salvaArquivo(FileUploadSbVO vo) {
         restClient.post()
                 .uri(vo.path())
-                .contentType(MediaType.TEXT_PLAIN).body(vo.file()).retrieve().toBodilessEntity();
+                .contentType(MediaType.TEXT_PLAIN) // TODO: obter de forma dinamica a partir do VO
+                .body(vo.file()).retrieve().toBodilessEntity();
     }
 
 }
