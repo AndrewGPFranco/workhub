@@ -1,7 +1,6 @@
 package com.agpf.workhub.models.library;
 
 import com.agpf.workhub.models.BaseEntity;
-import com.agpf.workhub.models.subdomains.Subdomain;
 import com.agpf.workhub.models.user.User;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
@@ -21,8 +20,8 @@ import lombok.Setter;
                 @Index(name = "idx_library_name", columnList = "name")
         },
         uniqueConstraints = {
-                @UniqueConstraint(name = "uc_library_name_path_user_subdomain", columnNames = {
-                        "name", "path", "user", "subdomain"
+                @UniqueConstraint(name = "uc_library_name_path_user", columnNames = {
+                        "name", "path", "user"
                 })
         }
 )
@@ -39,9 +38,5 @@ public class Library extends BaseEntity {
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)
     private User user;
-
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "subdomain_id", referencedColumnName = "id", nullable = false)
-    private Subdomain subdomain;
 
 }

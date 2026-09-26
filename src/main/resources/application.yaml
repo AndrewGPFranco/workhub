@@ -17,3 +17,9 @@ server:
 api:
   key:
     admin: ${API_KEY_ADMIN}
+supabase:
+  url: ${SUPABASE_URL}
+  secret:
+    key: ${SUPABASE_SECRET_KEY}
+  storage:
+    bucket: ${SUPABASE_STORAGE_BUCKET}
